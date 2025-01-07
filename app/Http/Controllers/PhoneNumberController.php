@@ -29,13 +29,14 @@ class PhoneNumberController extends Controller
                 return response()->json([
                     'status' => 'success',
                     'data' => $data
-                ], 200); // Tambahkan status code
+                ]);
             }
 
+            // Ubah response untuk data tidak ditemukan
             return response()->json([
-                'status' => 'error',
+                'status' => 'not_found',
                 'message' => 'Data tidak ditemukan'
-            ], 404); // Tambahkan status code
+            ], 200); // Gunakan 200 bukan 404
 
         } catch (\Exception $e) {
             \Log::error('Error in fetchData: ' . $e->getMessage());

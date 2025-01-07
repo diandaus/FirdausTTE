@@ -4,10 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Nomor Telepon</title>
+    
+    <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         body {
             background-color: #f8f9fa;
@@ -177,7 +183,6 @@
 <!-- Script -->
 <script>
 $(document).ready(function () {
-    // Debug flag
     const DEBUG = true;
     
     function debugLog(message, data = null) {
@@ -203,10 +208,25 @@ $(document).ready(function () {
     function cleanupModals() {
         debugLog('Cleaning up modals');
         try {
-            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-            document.body.classList.remove('modal-open');
-            document.body.style.overflow = '';
-            document.body.style.paddingRight = '';
+            // Tutup semua modal Bootstrap yang mungkin masih terbuka
+            $('.modal').modal('hide');
+            
+            // Hapus semua backdrop
+            $('.modal-backdrop').remove();
+            
+            // Reset body
+            $('body')
+                .removeClass('modal-open')
+                .css({
+                    'overflow': '',
+                    'padding-right': ''
+                });
+            
+            // Pastikan instance modal loading tertutup
+            if (bsLoadingModal) {
+                bsLoadingModal.hide();
+            }
+            
             debugLog('Modal cleanup completed');
         } catch (error) {
             console.error('Error during modal cleanup:', error);
@@ -223,16 +243,11 @@ $(document).ready(function () {
         $('#hiddenForm').empty();
         cleanupModals();
         
-        // Tampilkan loading
-        try {
-            debugLog('Showing loading modal');
-            bsLoadingModal.show();
-        } catch (error) {
-            console.error('Error showing loading modal:', error);
-        }
-        
         let phone = $('#phone').val();
         debugLog('Phone number:', phone);
+
+        // Tampilkan loading
+        bsLoadingModal.show();
 
         $.ajax({
             url: "{{ route('phone.fetch') }}",
@@ -247,281 +262,244 @@ $(document).ready(function () {
             success: function (response) {
                 debugLog('AJAX success response:', response);
                 
-                try {
-                    // Pastikan loading modal dihentikan sebelum menampilkan data
-                    if (loadingModal.classList.contains('show')) {
-                        debugLog('Force closing loading modal');
-                        bsLoadingModal.hide();
-                        cleanupModals();
-                    }
+                // Pastikan loading modal tertutup
+                bsLoadingModal.hide();
+                $('.modal-backdrop').remove();
+                $('body').removeClass('modal-open').css({
+                    'overflow': '',
+                    'padding-right': ''
+                });
+                
+                if (response.status === 'success' && response.data) {
+                    let user = response.data;
+                    debugLog('User data received:', user);
                     
-                    if (response.status === 'success' && response.data) {
-                        let user = response.data;
-                        debugLog('User data received:', user);
-                        
-                        // Update modal content
-                        $('#modalContent').html(`
-                            <div class="row g-4">
-                                <!-- Informasi Pribadi -->
-                                <div class="col-12 mb-2">
-                                    <h6 class="border-bottom pb-2 text-primary"><i class="bi bi-person-circle"></i> Informasi Pribadi</h6>
-                                </div>
-                                
-                                <div class="col-md-6">
-                                    <div class="d-flex align-items-start">
-                                        <i class="bi bi-person-vcard text-primary me-2 mt-1"></i>
-                                        <div>
-                                            <small class="text-muted d-block">No. KTP</small>
-                                            <span class="fw-medium">${user.ktp || '-'}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-6">
-                                    <div class="d-flex align-items-start">
-                                        <i class="bi bi-person text-primary me-2 mt-1"></i>
-                                        <div>
-                                            <small class="text-muted d-block">Nama</small>
-                                            <span class="fw-medium">${user.name || '-'}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-6">
-                                    <div class="d-flex align-items-start">
-                                        <i class="bi bi-geo text-primary me-2 mt-1"></i>
-                                        <div>
-                                            <small class="text-muted d-block">Tempat Lahir</small>
-                                            <span class="fw-medium">${user.place_of_birth || '-'}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-6">
-                                    <div class="d-flex align-items-start">
-                                        <i class="bi bi-calendar text-primary me-2 mt-1"></i>
-                                        <div>
-                                            <small class="text-muted d-block">Tanggal Lahir</small>
-                                            <span class="fw-medium">${user.date_of_birth || '-'}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-6">
-                                    <div class="d-flex align-items-start">
-                                        <i class="bi bi-gender-ambiguous text-primary me-2 mt-1"></i>
-                                        <div>
-                                            <small class="text-muted d-block">Jenis Kelamin</small>
-                                            <span class="fw-medium">${user.gender === 'M' ? 'Laki-laki' : 'Perempuan'}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-12">
-                                    <div class="d-flex align-items-start">
-                                        <i class="bi bi-geo-alt text-primary me-2 mt-1"></i>
-                                        <div>
-                                            <small class="text-muted d-block">Alamat</small>
-                                            <span class="fw-medium">${user.address || '-'}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Informasi Pekerjaan -->
-                                <div class="col-12 mt-4 mb-2">
-                                    <h6 class="border-bottom pb-2 text-primary"><i class="bi bi-briefcase"></i> Informasi Pekerjaan</h6>
-                                </div>
-                                
-                                <div class="col-12">
-                                    <div class="d-flex align-items-start">
-                                        <i class="bi bi-building text-primary me-2 mt-1"></i>
-                                        <div>
-                                            <small class="text-muted d-block">Unit Organisasi</small>
-                                            <span class="fw-medium">${user.org_unit || '-'}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-12">
-                                    <div class="d-flex align-items-start">
-                                        <i class="bi bi-diagram-3 text-primary me-2 mt-1"></i>
-                                        <div>
-                                            <small class="text-muted d-block">Unit Kerja</small>
-                                            <span class="fw-medium">${user.work_unit || '-'}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-12">
-                                    <div class="d-flex align-items-start">
-                                        <i class="bi bi-person-badge text-primary me-2 mt-1"></i>
-                                        <div>
-                                            <small class="text-muted d-block">Jabatan</small>
-                                            <span class="fw-medium">${user.position || '-'}</span>
-                                        </div>
+                    // Update modal content
+                    $('#modalContent').html(`
+                        <div class="row g-4">
+                            <!-- Informasi Pribadi -->
+                            <div class="col-12 mb-2">
+                                <h6 class="border-bottom pb-2 text-primary"><i class="bi bi-person-circle"></i> Informasi Pribadi</h6>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-person-vcard text-primary me-2 mt-1"></i>
+                                    <div>
+                                        <small class="text-muted d-block">No. KTP</small>
+                                        <span class="fw-medium">${user.ktp || '-'}</span>
                                     </div>
                                 </div>
                             </div>
-                        `);
+                            
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-person text-primary me-2 mt-1"></i>
+                                    <div>
+                                        <small class="text-muted d-block">Nama</small>
+                                        <span class="fw-medium">${user.name || '-'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-geo text-primary me-2 mt-1"></i>
+                                    <div>
+                                        <small class="text-muted d-block">Tempat Lahir</small>
+                                        <span class="fw-medium">${user.place_of_birth || '-'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-calendar text-primary me-2 mt-1"></i>
+                                    <div>
+                                        <small class="text-muted d-block">Tanggal Lahir</small>
+                                        <span class="fw-medium">${user.date_of_birth || '-'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-gender-ambiguous text-primary me-2 mt-1"></i>
+                                    <div>
+                                        <small class="text-muted d-block">Jenis Kelamin</small>
+                                        <span class="fw-medium">${user.gender === 'M' ? 'Laki-laki' : 'Perempuan'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-geo-alt text-primary me-2 mt-1"></i>
+                                    <div>
+                                        <small class="text-muted d-block">Alamat</small>
+                                        <span class="fw-medium">${user.address || '-'}</span>
+                                    </div>
+                                </div>
+                            </div>
 
-                        // Update hidden form
-                        $('#hiddenForm').html(`
-                            @csrf
-                            <input type="hidden" name="phone" value="${phone}">
-                            <input type="hidden" name="email" value="${user.email || ''}">
-                            <input type="hidden" name="name" value="${user.name || ''}">
-                            <input type="hidden" name="ktp" value="${user.ktp || ''}">
-                            <input type="hidden" name="npwp" value="${user.npwp || ''}">
-                            <input type="hidden" name="city" value="${user.city || ''}">
-                            <input type="hidden" name="province" value="${user.province || ''}">
-                            <input type="hidden" name="org_unit" value="${user.org_unit || ''}">
-                            <input type="hidden" name="work_unit" value="${user.work_unit || ''}">
-                            <input type="hidden" name="position" value="${user.position || ''}">
-                        `);
+                            <!-- Informasi Pekerjaan -->
+                            <div class="col-12 mt-4 mb-2">
+                                <h6 class="border-bottom pb-2 text-primary"><i class="bi bi-briefcase"></i> Informasi Pekerjaan</h6>
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-building text-primary me-2 mt-1"></i>
+                                    <div>
+                                        <small class="text-muted d-block">Unit Organisasi</small>
+                                        <span class="fw-medium">${user.org_unit || '-'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-diagram-3 text-primary me-2 mt-1"></i>
+                                    <div>
+                                        <small class="text-muted d-block">Unit Kerja</small>
+                                        <span class="fw-medium">${user.work_unit || '-'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-person-badge text-primary me-2 mt-1"></i>
+                                    <div>
+                                        <small class="text-muted d-block">Jabatan</small>
+                                        <span class="fw-medium">${user.position || '-'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `);
 
-                        // Tambahkan delay dan pastikan loading modal sudah tertutup
-                        setTimeout(() => {
-                            if (!loadingModal.classList.contains('show')) {
-                                debugLog('Showing phone modal');
+                    // Update hidden form
+                    $('#hiddenForm').html(`
+                        @csrf
+                        <input type="hidden" name="phone" value="${phone}">
+                        <input type="hidden" name="email" value="${user.email || ''}">
+                        <input type="hidden" name="name" value="${user.name || ''}">
+                        <input type="hidden" name="ktp" value="${user.ktp || ''}">
+                        <input type="hidden" name="npwp" value="${user.npwp || ''}">
+                        <input type="hidden" name="city" value="${user.city || ''}">
+                        <input type="hidden" name="province" value="${user.province || ''}">
+                        <input type="hidden" name="org_unit" value="${user.org_unit || ''}">
+                        <input type="hidden" name="work_unit" value="${user.work_unit || ''}">
+                        <input type="hidden" name="position" value="${user.position || ''}">
+                    `);
+
+                    // Tambahkan delay dan pastikan loading modal sudah tertutup
+                    setTimeout(() => {
+                        if (!loadingModal.classList.contains('show')) {
+                            debugLog('Showing phone modal');
+                            bsPhoneModal.show();
+                        } else {
+                            debugLog('Loading modal still shown, forcing cleanup');
+                            bsLoadingModal.hide();
+                            cleanupModals();
+                            setTimeout(() => {
                                 bsPhoneModal.show();
-                            } else {
-                                debugLog('Loading modal still shown, forcing cleanup');
-                                bsLoadingModal.hide();
-                                cleanupModals();
-                                setTimeout(() => {
-                                    bsPhoneModal.show();
-                                }, 100);
-                            }
-                        }, 500);
-                    } else {
-                        debugLog('No data found or error in response');
-                        alert(response.message || 'Data tidak ditemukan');
-                    }
-                } catch (error) {
-                    console.error('Error in success callback:', error);
-                    bsLoadingModal.hide();
-                    cleanupModals();
+                            }, 100);
+                        }
+                    }, 500);
+                } else if (response.status === 'not_found') {
+                    debugLog('Data not found');
+                    
+                    // Pastikan semua modal tertutup sebelum menampilkan SweetAlert
+                    $('.modal').modal('hide');
+                    $('.modal-backdrop').remove();
+                    
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Data Tidak Ditemukan',
+                        html: `
+                            <div class="text-start">
+                                <p class="mb-3">Nomor telepon <strong>${phone}</strong> tidak terdaftar dalam database.</p>
+                                <p class="mb-2">Silakan hubungi Manajemen Rumah Sakit untuk konfirmasi data Anda:</p>
+                                <ul class="mt-2 mb-0">
+                                    <li>Telepon: (021) XXXXXXXX</li>
+                                    <li>Email: admin@rs-example.com</li>
+                                </ul>
+                            </div>
+                        `,
+                        confirmButtonText: 'Tutup',
+                        confirmButtonColor: '#3085d6',
+                        allowOutsideClick: false,
+                        willOpen: () => {
+                            debugLog('SweetAlert will open');
+                            cleanupModals(); // Pastikan modal loading tertutup sebelum SweetAlert muncul
+                        },
+                        didOpen: () => {
+                            debugLog('SweetAlert opened');
+                            cleanupModals(); // Pastikan lagi modal loading tertutup
+                        },
+                        willClose: () => {
+                            debugLog('SweetAlert will close');
+                            cleanupModals(); // Bersihkan modal saat akan ditutup
+                        },
+                        didClose: () => {
+                            debugLog('SweetAlert closed');
+                            cleanupModals(); // Bersihkan modal setelah ditutup
+                            $('#phone').val('').focus();
+                        }
+                    });
                 }
             },
             error: function(xhr, status, error) {
-                console.error('AJAX Error:', {
-                    status: status,
-                    error: error,
-                    response: xhr.responseText,
-                    state: xhr.state()
-                });
+                debugLog('AJAX error:', { xhr, status, error });
+                
+                // Pastikan loading modal tertutup
                 bsLoadingModal.hide();
-                cleanupModals();
-                alert('Terjadi kesalahan saat mencari data');
-            },
-            complete: function() {
-                debugLog('AJAX request completed');
+                $('.modal-backdrop').remove();
+                $('body').removeClass('modal-open').css({
+                    'overflow': '',
+                    'padding-right': ''
+                });
+                
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Terjadi Kesalahan',
+                    html: `
+                        <div class="text-start">
+                            <p class="mb-3">Gagal melakukan pencarian data untuk nomor <strong>${phone}</strong>.</p>
+                            <p class="mb-2">Silakan coba lagi atau hubungi Manajemen Rumah Sakit jika masalah berlanjut:</p>
+                            <ul class="mt-2 mb-0">
+                                <li>Telepon: (021) XXXXXXXX</li>
+                                <li>Email: admin@rs-example.com</li>
+                            </ul>
+                        </div>
+                    `,
+                    confirmButtonText: 'Tutup',
+                    confirmButtonColor: '#3085d6',
+                    allowOutsideClick: false,
+                    willOpen: () => {
+                        debugLog('SweetAlert error opening');
+                        cleanupModals();
+                    },
+                    didClose: () => {
+                        debugLog('SweetAlert error closed');
+                        cleanupModals();
+                        $('#phone').val('').focus();
+                    }
+                });
             }
         });
     });
 
-    // Event listeners untuk modal
-    loadingModal.addEventListener('show.bs.modal', function () {
-        debugLog('Loading modal show event triggered');
-    });
-
+    // Prevent modal events from re-showing
     loadingModal.addEventListener('shown.bs.modal', function () {
         debugLog('Loading modal shown event triggered');
-    });
-
-    loadingModal.addEventListener('hide.bs.modal', function () {
-        debugLog('Loading modal hide event triggered');
     });
 
     loadingModal.addEventListener('hidden.bs.modal', function () {
         debugLog('Loading modal hidden event triggered');
         cleanupModals();
-    });
-
-    // Handle tombol close dengan try-catch
-    document.querySelectorAll('[data-bs-dismiss="modal"]').forEach(button => {
-        button.addEventListener('click', function() {
-            debugLog('Close button clicked');
-            try {
-                bsLoadingModal.hide();
-                bsPhoneModal.hide();
-                cleanupModals();
-            } catch (error) {
-                console.error('Error closing modals:', error);
-            }
-        });
-    });
-
-    // Handle tombol submit dengan error handling
-    $('#btnSubmit').on('click', function() {
-        debugLog('Submit button clicked');
-        try {
-            bsLoadingModal.show();
-        } catch (error) {
-            console.error('Error showing loading modal on submit:', error);
-        }
-        
-        $.ajax({
-            url: "{{ route('phone.submit') }}",
-            method: "POST",
-            data: $('#hiddenForm').serialize(),
-            success: function(response) {
-                debugLog('Submit success response:', response);
-                bsLoadingModal.hide();
-                cleanupModals();
-                
-                if (response.status === 'success') {
-                    alert(response.message || 'Data berhasil diproses');
-                    bsPhoneModal.hide();
-                    $('#phoneForm')[0].reset();
-                } else {
-                    alert(response.message || 'Gagal memproses data');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Submit Error:', {
-                    status: status,
-                    error: error,
-                    response: xhr.responseText
-                });
-                bsLoadingModal.hide();
-                cleanupModals();
-                alert('Terjadi kesalahan saat mengirim data');
-            }
-        });
-    });
-
-    // Tambahkan fungsi force cleanup
-    function forceCleanupModals() {
-        debugLog('Force cleaning up modals');
-        try {
-            // Hapus semua modal yang mungkin masih terbuka
-            const modals = document.querySelectorAll('.modal');
-            modals.forEach(modal => {
-                const bsModal = bootstrap.Modal.getInstance(modal);
-                if (bsModal) {
-                    bsModal.hide();
-                }
-            });
-            
-            // Bersihkan semua efek modal
-            document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
-            document.body.classList.remove('modal-open');
-            document.body.style.overflow = '';
-            document.body.style.paddingRight = '';
-            
-            debugLog('Force modal cleanup completed');
-        } catch (error) {
-            console.error('Error during force modal cleanup:', error);
-        }
-    }
-
-    // Tambahkan escape key handler
-    document.addEventListener('keydown', function(event) {
-        if (event.key === 'Escape') {
-            debugLog('Escape key pressed');
-            forceCleanupModals();
-        }
     });
 });
 </script>
