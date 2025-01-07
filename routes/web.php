@@ -5,6 +5,7 @@ use App\Http\Controllers\VideoVerificationController;
 use App\Http\Controllers\OCRController;
 use App\Http\Controllers\AkunPeruriController;
 use App\Http\Controllers\SpecimenController;
+use App\Http\Controllers\PhoneNumberController;
 use Illuminate\Support\Facades\Route;
 
 // Registration Routes
@@ -24,6 +25,11 @@ Route::post('/ocr-ktp', [OCRController::class, 'processKTP'])->name('ocr.ktp');
 // Specimen Routes
 Route::get('/specimen', [SpecimenController::class, 'index'])->name('specimen.index');
 Route::post('/specimen/send', [SpecimenController::class, 'send'])->name('specimen.send');
+
+// No Telepon 
+Route::get('/phone', [PhoneNumberController::class, 'index'])->name('phone.index');
+Route::post('/phone/fetch', [PhoneNumberController::class, 'fetchData'])->name('phone.fetch');
+Route::post('/phone/submit', [PhoneNumberController::class, 'submit'])->name('phone.submit');
 
 // Akun Peruri Routes - menggunakan resource
 Route::resource('akun-peruri', AkunPeruriController::class)->only([
