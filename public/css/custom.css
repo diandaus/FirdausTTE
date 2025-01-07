@@ -1,0 +1,45 @@
+/* Custom styles */
+.preview-image {
+    width: auto;
+    height: auto;
+    max-height: 150px;
+    object-fit: contain;
+    border: 1px solid #dee2e6;
+    padding: 0.25rem;
+    transition: all 0.3s ease;
+    background-color: #fff;
+}
+
+.input-group {
+    margin-bottom: 8px;
+}
+
+.auto-filled {
+    background-color: #e8f0fe !important;
+    transition: background-color 0.3s ease;
+}
+
+.navbar-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
+/* Responsive logo size */
+@media (max-width: 768px) {
+    .navbar-logo {
+        height: 32px;
+    }
+} 
+
+/* Untuk garis custom */
+.divider {
+    width: 2px;
+    background-color: #dee2e6;
+}
+
+.navbar-logo-small {
+    height: 35px !important;
+    width: auto;
+    object-fit: contain;
+}
