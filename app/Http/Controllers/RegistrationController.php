@@ -17,7 +17,9 @@ class RegistrationController extends Controller
 
     public function index()
     {
-        return view('registration.index');
+        return view('registration.index', [
+            'showTerms' => true
+        ]);
     }
 
     public function store(Request $request)

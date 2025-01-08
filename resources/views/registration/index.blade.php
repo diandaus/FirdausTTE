@@ -321,10 +321,371 @@
     </div>
 </div>
 
+<!-- Modal Syarat dan Ketentuan -->
+<div class="modal fade" id="termsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header flex-column align-items-center pb-0">
+                <!-- Logo -->
+                <div class="modal-logo mb-3">
+                    <img src="{{ asset('images/logo.png') }}" 
+                         alt="Logo Peruri" 
+                         style="height: 35px;">
+                </div>
+                <!-- Title -->
+                <h5 class="modal-title text-center" id="termsModalLabel">
+                    Syarat dan Ketentuan
+                </h5>
+            </div>
+            <hr class="modal-divider">
+            <div class="modal-body">
+            <style>
+.modal-header {
+    padding-top: 2rem;
+    border-bottom: none;
+}
+
+.modal-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-title {
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.modal-divider {
+    width: 90%;
+    height: 2px;
+    background-color: #dee2e6;
+    margin: 0 auto 1.5rem auto;
+    opacity: 1;
+}
+</style>
+                <!-- Kebijakan Privasi -->
+                                   
+                <div class="form-check">
+    <input class="form-check-input" type="checkbox" id="privacyCheck">
+    <label class="form-check-label" for="privacyCheck">
+        Saya setuju dengan <span class="text-blue">Kebijakan Privasi</span>
+    </label>
+</div>
+
+<div class="form-check">
+    <input class="form-check-input" type="checkbox" id="agreementCheck">
+    <label class="form-check-label" for="agreementCheck">
+        Saya setuju dengan <span class="text-blue">Perjanjian Pelanggan</span>
+    </label>
+</div>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="window.history.back()">Kembali</button>
+                <button type="button" class="btn btn-primary" id="agreeButton" disabled>Setuju</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Kebijakan Privasi -->
+<div class="modal fade" id="privacyPolicyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="privacyPolicyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header flex-column align-items-center pb-0">
+                <!-- Logo -->
+                <div class="modal-logo mb-3">
+                    <img src="{{ asset('images/logo.png') }}" 
+                         alt="Logo Peruri" 
+                         style="height: 35px;">
+                </div>
+                <!-- Title -->
+                <h5 class="modal-title text-center" id="privacyPolicyModalLabel">
+                    Kebijakan Privasi
+                </h5>
+            </div>
+            <hr class="modal-divider">
+            <div class="modal-body" style="text-align: justify;">
+
+<style>
+.modal-header {
+    padding-top: 2rem;
+    border-bottom: none;
+}
+
+.modal-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-title {
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.modal-divider {
+    width: 90%;
+    height: 2px;
+    background-color: #dee2e6;
+    margin: 0 auto 1.5rem auto;
+    opacity: 1;
+}
+</style>
+
+                <!-- Paragraf Pembuka -->
+                <div class="section mb-4">
+                    <p>Peruri CA sangat menghormati privasi Anda. Kebijakan Privasi ini telah disusun oleh Peruri CA untuk disepakati bersama Anda tentang praktik privasi yang dilaksanakan oleh Peruri CA sehubungan dengan situs web, produk, dan layanannya.</p>
+                    
+                    <p>Kebijakan privasi ini mematuhi peraturan perundang-undangan terkait perlindungan Data Pribadi yang memberikan kesempatan kepada Anda untuk mengetahui, memahami, dan menyetujui bagaimana Peruri CA mengumpulkan, mengolah, menganalisa, menggunakan, menyimpan, menampilkan, mengumumkan, menyebarluaskan, menghapus, dan memusnahkan Data Pribadi Anda yang diberikan kepada Peruri CA pada saat Anda melakukan registrasi dan menggunakan layanan Peruri CA.</p>
+
+                    <p>Dengan menggunakan layanan Peruri CA, maka Anda menyetujui praktik yang dijelaskan dalam Kebijakan Privasi ini.</p>
+                </div>
+
+                <!-- Daftar Istilah -->
+                <div class="section">
+                <h6 class="section-title"><span class="section-number">1.</span><span class="section-heading">Daftar Istilah</span></h6>
+                    <div class="section-content">
+                        <p class="section-intro">Dalam Perjanjian ini, yang dimaksud dengan:</p>
+                        <ul class="custom-list">
+                            <li>
+                                <span class="list-marker">a.</span>
+                                <span class="list-content"><strong class="term">Anda</strong> adalah pihak pengguna Sertifikat Elektronik atau pelanggan.</span>
+                            </li>
+                            <li>
+                                <span class="list-marker">b.</span>
+                                <span class="list-content"><strong class="term">Data Pribadi</strong> adalah data tentang orang perseorangan yang teridentifikasi atau dapat diidentifikasi secara tersendiri atau dikombinasi dengan informasi lainnya baik secara langsung maupun tidak langsung melalui sistem elektronik atau nonelektronik.</span>
+                            </li>
+                            <li>
+                                <span class="list-marker">c.</span>
+                                <span class="list-content"><strong class="term">Sertifikat Eletronik</strong> adalah sertifikat yang bersifat elektronik yang memuat tanda tangan elektronik dan identitas yang menunjukkan status subjek hukum para pihak dalam transaksi elektronik yang dikeluarkan oleh Peruri CA sebagai Penyelenggara Sertifikasi Elektronik (PSrE).</span>
+                            </li>
+                            <li>
+                                <span class="list-marker">d.</span>
+                                <span class="list-content"><strong class="term">Peruri CA</strong> adalah unit bisnis Peruri yang memberikan layanan tanda tangan elektronik, Sertifikat Elektronik, dan segel elektronik.</span>
+                            </li>
+                            <li>
+                                <span class="list-marker">e.</span>
+                                <span class="list-content"><strong class="term">Certification Practice Statement (CPS)</strong> adalah dokumen Peruri CA yang berisi kebijakan dan prosedur yang digunakan untuk mengoperasikan infrastruktur Kunci Publik. Dokumen CPS Peruri	CA	tersedia	di https://ca.peruri.co.id/ca/legal .</span>
+                            </li>
+                            <li>
+                                <span class="list-marker">f.</span>
+                                <span class="list-content"><strong class="term">Situs Repositori</strong> adalah situs dari Peruri CA yaitu https://ca.peruri.co.id/ca/legal.</span>
+                            </li>                    
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Pengumpulan Data Pribadi -->
+                <h6>2. Pengumpulan Data Pribadi</h6>
+                <p>Peruri CA mengumpulkan Data Pribadi Anda ketika Anda:</p>
+                <ul>
+                    <li>a. Melakukan pemesanan atau pendaftaran untuk produk atau layanan Sertifikat Elektronik dari Peruri CA;</li>
+                    <li>b. Melakukan pengkinian Data Pribadi;</li>
+                    <li>c. Mengakses layanan Peruri CA;</li>
+                    <li>d. Menanggapi survei; dan</li>
+                    <li>e. Mengisi formulir untuk bantuan pra/pasca penjualan.</li>
+                </ul>
+                <p>Agar Peruri CA dapat memenuhi permintaan produk atau layanan Sertifikat Elektronik, Anda harus memberikan Data Pribadi yang benar, akurat, terkini, dan lengkap kepada Peruri CA, termasuk namun tidak terbatas pada:</p>
+                <ul>                   
+                <li>a. Informasi pribadi seperti nama, tempat dan tanggal lahir, Kartu Tanda Penduduk (KTP) atau kartu identitas lainnya (termasuk informasi yang ada di dalamnya), alamat email,alamat tempat tinggal,nomor telepon, dan data biometrik;</li>
+                <li>b. Informasi hubungan yang membantu Peruri CA melakukan bisnis dengan Anda, seperti jenis produk dan layanan yang mungkin menarik bagi Anda, kontak dan preferensi produk, bahasa, preferensi pemasaran dan data demografis;</li>
+                <li>c. Informasi transaksional tentang bagaimana Anda berinteraksi dengan Peruri CA, termasuk pembelian, pertanyaan, informasi akun pelanggan, detail organisasi, riwayat transaksi dan korespondensi, dan informasi tentang bagaimana Anda menggunakan dan berinteraksi dengan situs web Peruri CA;dan</li>
+                <li>d. Pada saat Anda menggunakan layanan, Peruri CA akan mengumpulkan Data Pribadi secara otomatis seperti IP Address, device information, login information, browser client & version, operating system, dan data transaksi Pengguna yang berkaitan dengan penggunaan layanan Peruri CA.</li>
+            </ul>
+            <p>Dalam rangka memproses pesanan Sertifikat Elektronik dan meningkatkan layanan, Peruri CA dapat mengumpulkan informasi tambahan menggunakan data yang bersumber dari pihak ketiga yang telah bekerja sama dengan Peruri CA, antara lain lembaga pemerintahan seperti Dinas Kependudukan dan Catatan Sipil dan lembaga swasta.</p>
+            <p>Peruri CA tidak mengumpulkan Data Pribadi calon pelanggan yang tidak menyelesaikan proses registrasi atau yang registrasinya ditolak.</p>                
+            <p>Jika Anda memberikan informasi yang tidak benar, tidak akurat, tidak terkini, tidak lengkap, atau jika Peruri CA memiliki alasan yang kuat untuk mencurigai bahwa informasi tersebuttidak benar,tidak akurat,tidak terkini, atau tidak lengkap, Peruri CA memiliki hak untuk menangguhkan atau menghentikan akun Anda dan menolak segala dan semua layanan saat ini atau masa depan.</p>
+            <p>PeruriCA berkomitmen untuk merahasiakan dan melindungi Data Pribadi Anda, kecuali untuk informasi yang tercantum dalam Sertifikat Elektronik yang diterbitkan.</p>
+            <h6>3. Pengunaan Data Pri</h6><!-- Lanjutkan dengan semua bagian lainnya... -->
+                <p>Data Pribadi Anda akan digunakan untuk tujuan yang di tentukan di bawah ini:</p>
+                <ul>
+                    <li>a. Memeriksa kebenaran identitas</li>
+                    <p>Peruri CA menggunakan Data Pribadi Anda untuk melakukan pemeriksaan atas kebenaran identitas Anda.</p>
+                    <li>b. Memproses permintaan untuk produk dan layanan Peruri CA.</li>
+                    <p>Data Pribadi Anda digunakan untuk menyediakan produk dan layanan, pemrosesan pesanan, dan untuk melakukan transaksi bisnis seperti penagihan.</p>
+                    <li>c. Meningkatkan layanan pelanggan</li>
+                    <p>Data Pribadi Anda membantu Peruri CA untuk lebih efektif dalam memberikan dukungan teknis dan meningkatkan pelayanan.</p>
+                    <li>d. Mengirim pemberitahuan pembaruan</li>
+                    <p>Data Pribadi Anda dapat digunakan untuk mengirimkan pemberitahuan pembaruan untuk Sertifikat Elektronik Anda yang akan kedaluwarsa.</p>
+                    <li>e. Mengirim informasi layanan terbaru</li>
+                    <p>Peruri CA dapat mengirimkan informasi layanan terbaru, pembaharuan keamanan, informasi produk atau layanan terkait, dan pembaharuan status pada tampilan pemeliharaan atau ketersediaan layanan.</p>
+                    <li>f. Memberi tahu Anda tentang produk dan layanan Peruri CA</li>
+                    <p>Peruri CA dapat mengirimkan kepada Anda buletin perusahaan secara berkala, informasi tentang produk dan layanan yang Peruri CA anggap menarik bagi Anda berdasarkanpada penggunaan produk dan layanan Peruri CA lainnya, undangan untuk kehadiran Anda di acara pemasaran yang disponsori Peruri CA seperti webinar,dan/atau berkomunikasi dengan Anda sehubungan dengan layanan Peruri CA.</p>
+                </ul>
+                
+                <h6>4. Pengungkapan dan Transfer Data Pribadi</h6>
+                <p>Peruri CA tidak menjual Data Pribadi Anda kepada pihak lain.</p>
+                <p>Dengan menyetujui Kebijakan Privasi ini, Anda memberikan persetujuan kepada Peruri CAuntuk dapat melakukan pengungkapan dan transfer Data Pribadi yang tercantum dalam Kebijakan Privasi ini.</p>
+                <p>Peruri CA secara terbuka mengungkapkan Data Pribadi Anda, termasuk tetapi tidak terbatas pada Data Pribadi yang tercantum dalam Sertifikat Elektronik yang diterbitkan oleh Peruri CA atau Data Pribadi yang terdapat dalam akun Anda, yang dibutuhkan untuk memenuhi layanan yang Anda gunakan.</p>
+                <p>Selain ketentuan pengungkapan tersebut, Peruri CA dapat membagikan Data Pribadi Anda pada:</p>
+                <ul>
+                    <li>a. pihak ketiga yang merupakan bagian dari organisasi Peruri, anak perusahaan Peruri, dan perusahaan afiliasi Peruri sehubungan dengan pengelolaan bisnis;</li>
+                    <li>b. Pindividu, organisasi, entitas, otoritas pemerintahan, dan aparat penegak hukum dimana Peruri CA memiliki kewajiban terhadapnya untuk memenuhi ketentuan hukum	dan	peraturan perundang-undangan, dalam rangka proses penegakan hukum, pengambilan tindakan pencegahan sehubungan dengan kegiatan yang tidak sah, dugaan pelanggaran hukum, tindak pidana, atau pelanggaran peraturan perundang-undangan;</li>
+                    <li>c. pihak ketiga sebagai auditor yang berwenang dimana pihak ketiga tersebut diharuskan untuk mematuhi persyaratan kerahasiaan agar tidak mengungkapkan, menjual,	memperdagangkan, mendistribusikan, dan/atau menggunakan Data Pribadi Anda;</li>
+                    <li>d. agen, vendor, kontraktor, pemasok, atau pihak ketiga lainnya yang menyediakan layanan kepada Peruri CA sehingga Peruri CA dapat menyediakan layanan kepada Anda. Peruri CA memastikan bahwa agen, vendor, kontraktor, pemasok, atau pihak ketiga lainnya tersebut hanya akan menggunakan Data Pribadi Anda sesuai keperluan untuk mendukunglayananPeruri CA; dan</li>
+                    <li>e. pihak ketiga yang melanjutkan kegiatan usaha Peruri CA apabila terjadi penggabungan, pemisahan, atau pengambilalihan kegiatan usaha Peruri CA</li>
+                </ul>
+                
+                <h6> 5. Penyimpanan dan Retensi Data</h6>
+                <p>Data Pribadi yang Peruri CA kumpulkan akan dipertahankan sesuai jangka waktu retensi yang tercantum di CPS Peruri CA atau untuk periode yang secara khusus diwajibkan oleh hukum atau peraturan yang wajib diikuti oleh Peruri CA.</p>
+                <p>Untuk memenuhi persyaratan audit Root CA sebagaimana dirinci dalam CPS Peruri CA, Data Pribadi yang digunakan untuk memenuhi verifikasi jenis aplikasi Sertifikat Elektronik tertentu akan disimpan selama minimal 5 tahun tergantung pada kelas produk atau layanan dan dapat disimpan baik dalam format fisik atau elektronik. Setelah jangka waktu tersebut Peruri CA akan tetap menyimpan Data Pribadi sesuai dengan kesepakatan Anda kecuali Anda menghendaki secara tertulis untuk dilakukan penghapusan data. Silakan merujuk pada CPS Peruri CA untuk perincian lengkap.</p>
+                <p>Setelah periode penyimpanan berakhir, Peruri CA memusnahkan Data Pribadi Anda untuk mencegah kehilangan, pencurian, penyalahgunaan, atau akses tidak sah.</p>
+                
+                <h6>6. Pengamanan Data Pribadi</h6>
+                <p>Anda. Informasi yang Anda berikan ketika melakukan transaksi dengan memasukkan, mengunggah, mengirim, dan mengakses Data Pribadi Anda akan terkirim secara rahasia dan tersimpan dengan aman. Peruri CA menerapkan standar keamanan informasi yang tinggi dan sesuai dengan peraturan perundang-undangan untuk melindungi Data Pribadi Anda.</p>
+                <p>Anda bertanggung jawab untuk menjaga kerahasiaan Data Pribadi Anda, kata sandi, One Time Password (OTP), dan token yang dihasilkan oleh aplikasi KEYLA serta menjaga keamanan perangkat yang Anda gunakan untuk mengakses layanan Peruri CA. Peruri CA tidak bertanggung jawab atas segala kerugian yang timbul akibat kelalaian Anda dalam menjaga kerahasiaan kata sandi, OTP, atau token yang dihasilkan oleh aplikasi KEYLA dan kelalaian Anda dalam menjaga kemanan perangkat.</p>
+                
+                <h6>7. Hak Anda</h6>
+                <ul>
+                    <li>a. Permintaan Akses</li>
+                    <p>Anda memiliki hak untuk mengakses dan mengubah Data Pribadi Anda yang tersimpan di sistem Peruri CA.</p>
+                    <li>b. Perubahan</li>
+                    <p>Anda berhak memelihara, mengubah, dan memperbarui Data Pribadi Anda agar tetap benar, akurat, terkini, dan lengkap.</p>
+                    <li>c. Penghapusan</li>
+                    <p>Anda memiliki hak untuk meminta penghapusan Data Pribadi Anda dari sistem Peruri CA. Penghapusan Data Pribadi berdampak pada penutupan akun dan layanan Peruri CA bagi Anda. Penghapusan hanya dapat dilakukan terhadap Data Pribadi yang tersimpan di area produksi, dan akan dilakukan sesuai prosedur yang aman. Dalam hal Data Pribadi sudah diarsipkan, maka ketentuan ini tidak berlaku dan Data Pribadi akan terhapus sesuai masa retensinya.</p>
+                    <li>d. Menarik Persetujuan</li>
+                    <p>Jika Peruri CA sedang memproses Data Pribadi Anda berdasarkan persetujuan Anda, Anda dapat menarik persetujuan pemrosesan Data Pribadi Anda kapan saja. Penarikan persetujuan Anda berdampak pada penutupan akun dan layanan PeruriCA bagi Anda.</p>
+                </ul>
+                <p>Anda dapat menggunakan hak Anda dengan menghubungi Peruri CA secara tertulis, melalui e-mail ke alamat cs.digital@peruri.co.id.</p>
+                <p>Peruri CA akan meminta dan Anda wajib untuk memberikan identifikasi dalam rangka memverifikasi keakuratan data dan keaslian sebagai subjek data. Peruri CA akan melakukan upaya yang wajar untuk menanggapi dan memproses permintaan Anda sebagaimana diharuskan oleh hukum.</p>
+
+                <h6>8. Tempat Pemrosesan dan Penyimpanan</h6>
+                <p>Data Pribadi ditempatkan dan diproses di wilayah hukum Negara Kesatuan Republik Indonesia.</p>
+
+                <h6>9. Hukum yang Berlaku dan Kebijakan yang Relevan</h6>
+                <p>Kebijakan Privasi ini diatur dan ditafsirkan berdasarkan hukum Negara Republik Indonesia. Peruri CA berkomitmen untuk melindungi Data Pribadi Anda dan mematuhi ketentuan peraturan perundang-undangan terkait perlindungan data pribadi. Peruri CA menyatakan untuk menghormati sepenuhnya semua hak yang ditetapkan dan dituangkan dalam hukum dan peraturan Indonesia:</p>
+                <ul class="custom-list">
+                    <li>
+                        <span class="list-marker">a.</span>
+                        <span class="list-content">Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi;</span>
+                    </li>
+                    <li>
+                        <span class="list-marker">b.</span>
+                        <span class="list-content">Undang-Undang Nomor 11 Tahun 2008 tentang Informasi dan Transaksi Elektronik sebagaimana telah diubah dengan Undang-Undang Nomor 19 Tahun 2016 tentang Perubahan Atas Undang-Undang Nomor 11 Tahun 2008 tentang Informasi dan Transaksi Elektronik;</span>
+                    </li>
+                    <li>
+                        <span class="list-marker">c.</span>
+                        <span class="list-content">Peraturan Menteri Komunikasi dan Informatika Republik Indonesia Nomor 20 Tahun 2016 tentang Perlindungan Data Pribadi Dalam Sistem Elektronik; dan</span>  
+                        </li>
+                        <li>
+                        <span class="list-marker">d.</span>
+                        <span class="list-content">Undang-Undang Nomor 27 Tahun 2022 tentang Pelindungan Data Pribadi;</span>
+                    </li>
+                    <li>
+                        <span class="list-marker">e.</span>
+                        <span class="list-content">Peraturan Menteri Komunikasi dan Informatika Republik Indonesia Nomor 11 Tahun 2022 tentang Tata Kelola Penyelenggaraan Sertifikasi Elektronik.</span>
+                    </li>
+                    
+                    
+                   
+                </ul>
+                <p>Jika ada bagian dari Kebijakan Privasi ini yang dianggap tidak sah berrdasarkan hukum dan ketentuan peraturan perundang-undangan, ketentuan lain dalam Kebijakan Privasi ini tetap berlaku seutuhnya.</p>
+
+                <h6>10. Pembatasan Tanggung Jawab</h6>
+                <p>Sengketa yang terjadi antara Anda dengan Peruri CA sehubungan dengan ketentuan Keijakan Privasi ini, akan diselesaikan dengan cara:</p>
+                
+                
+                <h6>11. Penyelesaian Sengketa</h6>
+                <p>Peruri CA dapat menggunakan Data Pribadi Anda untuk tujuan lain yang tidak tercantum dalam Kebijakan Privasi ini, kecuali jika Anda memberikan persetujuan terlebih dahulu.</p>
+                <ul class="custom-list">
+                    <li>
+                        <span class="list-marker">a.</span>
+                        <span class="list-content">Salah satu pihak menyampaikan pemberitahuan secara tertulis kepada pihak lainnya. Penyelesaian sengketa wajib dilakukan dengan cara musyawarah dalam jangka waktu 30 (tiga puluh) kalender hari sejak pemberitahuan tertulis disampaikan.</span>
+                    </li>
+                    <li>
+                        <span class="list-marker">b.</span>
+                        <span class="list-content">Apabila sengketa tidak dapat diselesaikan dengan cara musyawarah, maka para pihak sepakat bahwa penyelesaian sengketa dilakukan oleh Badan Arbitrase Nasional Indonesia (BANI).</span>
+                    </li>
+                </ul>
+
+                <div class="section">
+                    <h6 class="section-title"><strong>12. Bahasa</strong></h6>
+                        <div class="section-content">
+                            <p class="section-intro">Kebijakan Privasi ini dibuat dalam 2 (dua) bahasa, yaitu Bahasa Indonesia dan Bahasa Inggris. Dalam hal terdapat ketidaksesuaian antara satu bahasa dengan bahasa yang lain, maka teks Bahasa Indonesia yang akan berlaku.</p>
+        
+                        </div>
+                </div>
+
+                <div class="section">
+                    <h6 class="section-title"><strong>13. Perubahan pada Kebijakan Privasi</strong></h6>
+                        <div class="section-content">
+                            <p class="section-intro">Jika Peruri CA membuat perubahan materipada Kebijakan Privasi ini,Peruri CA akan memberi tahu Anda dengan mengunggah versi terbaru ke situs. Dokumen Kebijakan Privasidan setiap perubahan yang dilakukan dapat diakses secara publik dalam waktu selambat-lambatnya 7 (tujuh) hari kalender setelah disetujui. Setiap perubahan efektif berlaku 30 (tiga puluh) hari kalender setelah dipublikasikan.</p>
+        
+                        </div>
+                </div>
+                
+                <div class="section">
+                <h6 class="section-title"><strong>14. Hubungi kami</strong></h6>
+                    <div class="section-content">
+                        <p class="section-intro">Jika Anda memiliki pertanyaan tentang Kebijakan Privasi ini, silakan hubungi Peruri CA melalui:</p>
+                        <div class="contact-info">
+                            <table class="contact-table">
+                                <tr>
+                                            <td width="80">E-mail</td>
+                                            <td width="10">:</td>
+                                            <td>info.digital@peruri.co.id</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Telepon</td>
+                                            <td>:</td>
+                                            <td>+62 21 739 5000</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Alamat</td>
+                                            <td>:</td>
+                                            <td>Perum Peruri<br>
+                                                Jl. Palatehan Blok KV No 4,<br>
+                                                Kebayoran Baru, Jakarta 12160, Indonesia</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                    </div>
+                </div>
+                              
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-primary" id="agreePrivacyPolicy" disabled>Setuju</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
 <script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Tampilkan modal saat halaman dimuat
+    const termsModal = new bootstrap.Modal(document.getElementById('termsModal'));
+    termsModal.show();
+
+    // Fungsi untuk mengecek status checkbox
+    function checkAgreements() {
+        const privacyChecked = document.getElementById('privacyCheck').checked;
+        const agreementChecked = document.getElementById('agreementCheck').checked;
+        document.getElementById('agreeButton').disabled = !(privacyChecked && agreementChecked);
+    }
+
+    // Event listener untuk checkbox
+    document.getElementById('privacyCheck').addEventListener('change', checkAgreements);
+    document.getElementById('agreementCheck').addEventListener('change', checkAgreements);
+
+    // Event listener untuk tombol Setuju
+    document.getElementById('agreeButton').addEventListener('click', function() {
+        termsModal.hide();
+        // Tampilkan form registrasi
+        document.querySelector('.container').style.display = 'block';
+    });
+});
+
 // Inisialisasi preview saat halaman dimuat
 document.addEventListener('DOMContentLoaded', function() {
     const ktpPhotoPath = document.getElementById('ktpPhotoPath').value;
@@ -472,6 +833,81 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Tampilkan modal saat halaman dimuat
+    const termsModal = new bootstrap.Modal(document.getElementById('termsModal'));
+    termsModal.show();
+
+    // Fungsi untuk mengecek status checkbox
+    function checkAgreements() {
+        const privacyChecked = document.getElementById('privacyCheck').checked;
+        const agreementChecked = document.getElementById('agreementCheck').checked;
+        document.getElementById('agreeButton').disabled = !(privacyChecked && agreementChecked);
+    }
+
+    // Event listener untuk checkbox
+    document.getElementById('privacyCheck').addEventListener('change', checkAgreements);
+    document.getElementById('agreementCheck').addEventListener('change', checkAgreements);
+
+    // Event listener untuk tombol Setuju
+    document.getElementById('agreeButton').addEventListener('click', function() {
+        termsModal.hide();
+        // Tampilkan form registrasi
+        document.querySelector('.container').style.display = 'block';
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const privacyCheck = document.getElementById('privacyCheck');
+    const privacyPolicyModal = new bootstrap.Modal(document.getElementById('privacyPolicyModal'));
+    
+    // Event ketika checkbox privasi diklik
+    privacyCheck.addEventListener('click', function(e) {
+        e.preventDefault();
+        privacyPolicyModal.show();
+    });
+
+    // Event ketika tombol Setuju diklik
+    document.getElementById('agreePrivacyPolicy').addEventListener('click', function() {
+        privacyCheck.checked = true;
+        privacyPolicyModal.hide();
+        checkAgreements();
+    });
+
+    // Event ketika tombol Kembali diklik
+    document.querySelector('.modal-footer .btn-secondary').addEventListener('click', function() {
+        window.history.back();
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const modalBody = document.querySelector('#privacyPolicyModal .modal-body');
+    const agreeButton = document.getElementById('agreePrivacyPolicy');
+    let hasReachedBottom = false;
+
+    // Fungsi untuk mengecek apakah user sudah scroll sampai bawah
+    function checkScrollPosition() {
+        const scrollPosition = modalBody.scrollTop + modalBody.clientHeight;
+        const scrollHeight = modalBody.scrollHeight;
+        
+        // Toleransi 10px untuk mengatasi perbedaan perhitungan di berbagai browser
+        if (scrollHeight - scrollPosition <= 10) {
+            hasReachedBottom = true;
+            agreeButton.disabled = false;
+        }
+    }
+
+    // Event listener untuk scroll
+    modalBody.addEventListener('scroll', checkScrollPosition);
+
+    // Reset status saat modal dibuka
+    document.getElementById('privacyPolicyModal').addEventListener('show.bs.modal', function() {
+        hasReachedBottom = false;
+        agreeButton.disabled = true;
+        modalBody.scrollTop = 0;
+    });
+});
 </script>
 @endpush
 
@@ -586,5 +1022,223 @@ button:disabled {
     cursor: not-allowed;
     opacity: 0.7;
 }
+
+/* Sembunyikan container form saat awal */
+
+
+/* Style untuk modal */
+.modal-dialog-scrollable .modal-content {
+    border-radius: 15px;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.form-check {
+    margin-top: 1rem;
+}
+
+.btn {
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+}
+
+#agreeButton:disabled {
+    cursor: not-allowed;
+}
+
+/* Styling untuk modal kebijakan privasi */
+.privacy-content {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.privacy-content h6 {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.privacy-content ul {
+    padding-left: 1.5rem;
+}
+
+.privacy-content li {
+    margin-bottom: 0.5rem;
+}
+
+.modal-dialog-scrollable .modal-content {
+    max-height: 90vh;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    border-top: 1px solid #dee2e6;
+    padding: 1rem 2rem;
+}
+
+.modal-footer .btn {
+    min-width: 120px;
+    font-weight: 500;
+}
+
+.modal-footer .btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.modal-footer .btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.modal-body ul {
+    list-style-type: none;
+    padding-left: 1.5rem;
+}
+
+.modal-body li {
+    margin-bottom: 0.75rem;
+    text-align: justify;
+}
+
+.modal-body li strong {
+    margin-right: 0.5rem;
+}
+
+.section {
+    margin-bottom: 1.5rem;
+}
+
+.section-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+    padding-left: 1px;
+    display: flex;
+    align-items: center;
+}
+
+.section-number {
+    margin-right: 0.75rem; /* Menambah jarak antara nomor dan judul */
+}
+
+.section-heading {
+    flex: 1;
+}
+
+.section-content {
+    padding-left: 30px;
+}
+
+.section-intro {
+    margin-bottom: 0.1rem; /* Dikurangi dari 1rem */
+}
+
+.custom-list {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 0.1rem; /* Ditambahkan untuk mengatur jarak dari paragraf di atasnya */
+}
+
+.custom-list li {
+    display: flex;
+    margin-bottom: 0.1rem; /* Dikurangi dari 0.75rem */
+    align-items: flex-start;
+}
+
+.list-marker {
+    flex: 0 0 30px;
+    padding-right: 5px;
+}
+
+.list-content {
+    flex: 1;
+    padding-left: 5px;
+}
+
+
+
+.term {
+    font-weight: 700;
+    color: #333;
+}
+
+.contact-info {
+    margin: 10px 0;
+}
+
+.contact-table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    line-height: 1.2; /* Mengurangi line height */
+}
+
+.contact-table td {
+    padding: 2px 0; /* Mengurangi padding vertikal */
+    vertical-align: top;
+}
+
+.contact-table br {
+    line-height: 1.2; /* Mengurangi jarak antar baris pada alamat */
+}
+
+.modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+#agreePrivacyPolicy:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Tambahkan indikator scroll */
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
+
+/* Styling untuk tabel kontak */
+.contact-info {
+    margin: 15px 0;
+    margin-bottom: 0.1rem;
+}
+
+.contact-table {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+.contact-table td {
+    padding: 5px 0;
+    vertical-align: top;
+}
+
+.text-blue {
+        color: blue;
+        font-weight: bold; /* Opsional, jika ingin teks lebih menonjol */
+    }
+
 </style>
 @endpush 
