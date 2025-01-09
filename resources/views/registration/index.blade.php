@@ -410,34 +410,6 @@
             <hr class="modal-divider">
             <div class="modal-body" style="text-align: justify;">
 
-<style>
-.modal-header {
-    padding-top: 2rem;
-    border-bottom: none;
-}
-
-.modal-logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-title {
-    font-weight: 600;
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 1rem;
-}
-
-.modal-divider {
-    width: 90%;
-    height: 2px;
-    background-color: #dee2e6;
-    margin: 0 auto 1.5rem auto;
-    opacity: 1;
-}
-</style>
-
                 <!-- Paragraf Pembuka -->
                 <div class="section mb-4">
                     <p>Peruri CA sangat menghormati privasi Anda. Kebijakan Privasi ini telah disusun oleh Peruri CA untuk disepakati bersama Anda tentang praktik privasi yang dilaksanakan oleh Peruri CA sehubungan dengan situs web, produk, dan layanannya.</p>
@@ -913,6 +885,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
 @push('styles')
 <style>
+.modal-header {
+    padding-top: 2rem;
+    border-bottom: none;
+}
+
+.modal-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-title {
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.modal-divider {
+    width: 90%;
+    height: 2px;
+    background-color: #dee2e6;
+    margin: 0 auto 1.5rem auto;
+    opacity: 1;
+}
+
 .preview-wrapper {
     min-height: 0;
     padding: 0;
