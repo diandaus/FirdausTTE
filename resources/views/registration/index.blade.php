@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@push('styles')
+    <link href="{{ asset('css/registration.css') }}" rel="stylesheet">
+@endpush
+
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
@@ -63,11 +67,10 @@
                                    accept="image/*"
                                    required>
 
-                            <!-- Preview container dengan style display: none default -->
                             <div class="mt-2 preview-wrapper" id="previewContainer" style="display: none;">
                                 <img id="ktpPreview" 
                                      src="" 
-                                     alt="" 
+                                     alt="Preview KTP" 
                                      class="img-thumbnail preview-image">
                             </div>
 
@@ -390,6 +393,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- Modal Kebijakan Privasi -->
 <div class="modal fade" id="privacyPolicyModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="privacyPolicyModalLabel" aria-hidden="true">
@@ -885,32 +889,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 @push('styles')
 <style>
-.modal-header {
-    padding-top: 2rem;
-    border-bottom: none;
-}
-
-.modal-logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-title {
-    font-weight: 600;
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 1rem;
-}
-
-.modal-divider {
-    width: 90%;
-    height: 2px;
-    background-color: #dee2e6;
-    margin: 0 auto 1.5rem auto;
-    opacity: 1;
-}
-
 .preview-wrapper {
     min-height: 0;
     padding: 0;

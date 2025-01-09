@@ -6,6 +6,7 @@ use App\Http\Controllers\OCRController;
 use App\Http\Controllers\AkunPeruriController;
 use App\Http\Controllers\SpecimenController;
 use App\Http\Controllers\PhoneNumberController;
+use App\Http\Controllers\PhoneVerificationController;
 use Illuminate\Support\Facades\Route;
 
 // Registration Routes
@@ -35,6 +36,10 @@ Route::post('/phone/submit', [PhoneNumberController::class, 'submit'])->name('ph
 Route::resource('akun-peruri', AkunPeruriController::class)->only([
     'index', 'create', 'store', 'show'
 ]);
+
+// Phone Verification Routes
+Route::post('/verify/send-otp', [PhoneVerificationController::class, 'sendOTP'])->name('verify.send-otp');
+Route::post('/verify/verify-otp', [PhoneVerificationController::class, 'verifyOTP'])->name('verify.verify-otp');
 
 // Debug routes hanya jika dalam mode debug
 if (config('app.debug')) {

@@ -1,0 +1,201 @@
+/* Base Container & Modal Styles */
+.container {
+    display: none;
+}
+
+.modal-content {
+    border-radius: 15px;
+    border: none;
+}
+
+/* Modal Header Styles */
+.modal-header {
+    padding-top: 2rem;
+    border-bottom: none;
+}
+
+.modal-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-title {
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.modal-divider {
+    width: 90%;
+    height: 2px;
+    background-color: #dee2e6;
+    margin: 0 auto 1.5rem auto;
+    opacity: 1;
+}
+
+/* Modal Body & Footer Styles */
+.modal-body {
+    padding: 2rem;
+    max-height: 70vh;
+    overflow-y: auto;
+    text-align: justify;
+}
+
+.modal-footer {
+    border-top: 1px solid #dee2e6;
+    padding: 1rem 2rem;
+}
+
+/* Custom Scrollbar Styles */
+.modal-body::-webkit-scrollbar {
+    width: 12px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 6px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 6px;
+    min-height: 40px;
+    border: 2px solid #f1f1f1;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Form Elements & Preview Styles */
+.preview-wrapper {
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.preview-image {
+    width: auto;
+    height: auto;
+    max-height: 150px;
+    object-fit: contain;
+    border: 1px solid #dee2e6;
+    padding: 0.25rem;
+    background-color: #fff;
+}
+
+.auto-filled {
+    background-color: #e8f0fe !important;
+    transition: background-color 0.3s ease;
+}
+
+/* Button Styles */
+.btn-lg {
+    padding: 12px 24px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+}
+
+.btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Section Layout Styles */
+.section {
+    margin-bottom: 1.5rem;
+}
+
+.section-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+
+.section-content {
+    padding-left: 30px;
+}
+
+/* List Component Styles */
+.custom-list {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 0.1rem;
+}
+
+.custom-list li {
+    display: flex;
+    margin-bottom: 0.1rem;
+    align-items: flex-start;
+}
+
+/* Contact Information Styles */
+.contact-table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    line-height: 1.2;
+}
+
+.contact-table td {
+    padding: 2px 0;
+    vertical-align: top;
+}
+
+/* Utility Classes */
+.text-blue {
+    color: blue;
+    font-weight: bold;
+}
+
+/* Responsive Design - Mobile */
+@media (max-width: 768px) {
+    .modal-dialog {
+        margin: 0.5rem;
+    }
+    
+    .modal-body {
+        padding: 1rem;
+        max-height: 65vh;
+    }
+    
+    .modal-body p, 
+    .modal-body li {
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+    
+    .form-check {
+        padding: 1rem;
+        margin: 0.5rem 0;
+    }
+    
+    .form-check-input {
+        width: 1.5em;
+        height: 1.5em;
+        margin-top: 0.2em;
+    }
+    
+    .form-check-label {
+        padding-left: 0.5rem;
+        font-size: 16px;
+    }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .modal-body {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .modal-footer .btn {
+        padding: 0.75rem 1.5rem;
+        font-size: 16px;
+        min-height: 44px;
+    }
+} 
