@@ -342,34 +342,7 @@
             </div>
             <hr class="modal-divider">
             <div class="modal-body">
-            <style>
-.modal-header {
-    padding-top: 2rem;
-    border-bottom: none;
-}
-
-.modal-logo {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-title {
-    font-weight: 600;
-    font-size: 1.5rem;
-    color: #333;
-    margin-bottom: 1rem;
-}
-
-.modal-divider {
-    width: 90%;
-    height: 2px;
-    background-color: #dee2e6;
-    margin: 0 auto 1.5rem auto;
-    opacity: 1;
-}
-</style>
-                <!-- Kebijakan Privasi -->
+      <!-- Kebijakan Privasi -->
                                    
                 <div class="form-check">
     <input class="form-check-input" type="checkbox" id="privacyCheck">
@@ -413,6 +386,8 @@
             </div>
             <hr class="modal-divider">
             <div class="modal-body" style="text-align: justify;">
+
+
 
                 <!-- Paragraf Pembuka -->
                 <div class="section mb-4">
@@ -633,588 +608,95 @@
     </div>
 </div>
 
+<!-- Modal Perjanjian Pelanggan -->
+<div class="modal fade" id="customerAgreementModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="customerAgreementModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header flex-column align-items-center pb-0">
+                <!-- Logo -->
+                <div class="modal-logo mb-3">
+                    <img src="{{ asset('images/logo.png') }}" 
+                         alt="Logo Peruri" 
+                         style="height: 35px;">
+                </div>
+                <!-- Title -->
+                <h5 class="modal-title text-center" id="customerAgreementModalLabel">
+                    Perjanjian Pelanggan
+                </h5>
+            </div>
+            <hr class="modal-divider">
+            <div class="modal-body" style="text-align: justify;">
+                <p>Harap baca perjanjian ini dengan saksama sebelum melanjutkan. Tujuan Sertifikat Elektronik adalah untuk mengikat identitas Anda dengan pasangan Kunci Privat dan Kunci Publik. Dengan memperoleh atau menggunakan Sertifikat Elektronik yang diberikan oleh Peruri CA, Anda setuju untuk:</p>
+
+                <ol>
+                    <li>Memberikan informasi yang benar, akurat, dan lengkap tentang diri Anda;</li>
+                    <li>Menjaga kerahasiaan dan keamanan Kunci Privat Anda;</li>
+                    <li>Menggunakan Sertifikat Elektronik hanya untuk tujuan yang sah dan sesuai dengan hukum yang berlaku;</li>
+                    <li>Segera memberitahu Peruri CA jika terjadi atau diduga terjadi kebocoran Kunci Privat;</li>
+                    <li>Menghentikan penggunaan Sertifikat Elektronik jika informasi dalam sertifikat tidak lagi akurat;</li>
+                    <li>Menggunakan Sertifikat Elektronik hanya pada server yang dapat diakses pada domain yang tercantum dalam Sertifikat Elektronik (untuk SSL/TLS Server Certificate);</li>
+                    <li>Bertanggung jawab atas segala kerugian yang timbul akibat kegagalan dalam menjaga kerahasiaan Kunci Privat;</li>
+                    <li>Mematuhi semua persyaratan dan ketentuan yang ditetapkan dalam CPS Peruri CA;</li>
+                    <li>Membayar biaya yang dikenakan oleh Peruri CA untuk layanan yang diberikan;</li>
+                    <li>Menyetujui bahwa Peruri CA berhak mencabut Sertifikat Elektronik jika:
+                        <ul>
+                            <li>Informasi dalam Sertifikat Elektronik tidak benar atau telah berubah</li>
+                            <li>Kunci Privat telah diketahui oleh pihak lain</li>
+                            <li>Melanggar ketentuan dalam perjanjian ini</li>
+                            <li>Diperintahkan oleh penegak hukum atau pengadilan</li>
+                            <li>CPS mengharuskan pencabutan</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <p>Dengan menandatangani atau menyetujui Perjanjian ini, Anda menyatakan bahwa:</p>
+                <ul>
+                    <li>Anda telah membaca, memahami, dan setuju untuk terikat dengan semua ketentuan dalam Perjanjian ini</li>
+                    <li>Anda memiliki kewenangan untuk menerima Perjanjian ini</li>
+                    <li>Perjanjian ini merupakan kewajiban hukum yang sah dan mengikat</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-primary" id="agreeCustomerAgreement" disabled>Setuju</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal OTP Verification -->
+<div class="modal fade" id="otpModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header flex-column align-items-center">
+                <div class="modal-logo mb-3">
+                    <img src="{{ asset('images/logo.png') }}" alt="Logo Peruri" style="height: 35px;">
+                </div>
+                <h5 class="modal-title" id="otpModalLabel">Verifikasi Nomor Handphone</h5>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <p>Kode OTP telah dikirim ke nomor, cek pesan anda:</p>
+                    <h5 class="phone-display mb-0"></h5>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="otp" class="form-label">Masukkan Kode OTP</label>
+                    <input type="text" class="form-control form-control-lg text-center" id="otpInput" maxlength="6" placeholder="000000">
+                    <small class="text-muted d-block text-center mt-2">Kode OTP akan kadaluarsa dalam <span id="otpTimer">05:00</span></small>
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-primary" id="verifyOtpBtn">Verifikasi</button>
+                    <button type="button" class="btn btn-outline-primary" id="resendOtpBtn" disabled>
+                        Kirim Ulang OTP (<span id="resendTimer">60</span>)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
-<script>
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Tampilkan modal saat halaman dimuat
-    const termsModal = new bootstrap.Modal(document.getElementById('termsModal'));
-    termsModal.show();
-
-    // Fungsi untuk mengecek status checkbox
-    function checkAgreements() {
-        const privacyChecked = document.getElementById('privacyCheck').checked;
-        const agreementChecked = document.getElementById('agreementCheck').checked;
-        document.getElementById('agreeButton').disabled = !(privacyChecked && agreementChecked);
-    }
-
-    // Event listener untuk checkbox
-    document.getElementById('privacyCheck').addEventListener('change', checkAgreements);
-    document.getElementById('agreementCheck').addEventListener('change', checkAgreements);
-
-    // Event listener untuk tombol Setuju
-    document.getElementById('agreeButton').addEventListener('click', function() {
-        termsModal.hide();
-        // Tampilkan form registrasi
-        document.querySelector('.container').style.display = 'block';
-    });
-});
-
-// Inisialisasi preview saat halaman dimuat
-document.addEventListener('DOMContentLoaded', function() {
-    const ktpPhotoPath = document.getElementById('ktpPhotoPath').value;
-    const previewContainer = document.getElementById('previewContainer');
-    const preview = document.getElementById('ktpPreview');
-    
-    if (ktpPhotoPath) {
-        preview.src = ktpPhotoPath;
-        previewContainer.style.display = 'block';
-    }
-});
-
-// Preview handler untuk file input
-function handleImagePreview(input) {
-    const previewContainer = document.getElementById('previewContainer');
-    const preview = document.getElementById('ktpPreview');
-    
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        
-        reader.onload = function(e) {
-            preview.src = e.target.result;
-            previewContainer.style.display = 'block';
-        }
-        
-        reader.readAsDataURL(input.files[0]);
-    } else {
-        preview.src = '';
-        previewContainer.style.display = 'none';
-    }
-}
-
-// Event listener untuk KTP photo
-document.getElementById('ktpPhoto').addEventListener('change', function() {
-    handleImagePreview(this);
-    handleKTPUpload(this);
-});
-
-// KTP upload dan OCR handler
-async function handleKTPUpload(input) {
-    if (!input.files || !input.files[0]) return;
-    
-    try {
-        const formData = new FormData();
-        formData.append('ktpPhoto', input.files[0]);
-        formData.append('_token', document.querySelector('meta[name="csrf-token"]').content);
-
-        const response = await fetch('{{ route("ocr.ktp") }}', {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                'Accept': 'application/json'
-            }
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            const result = data.result;
-            
-            fillFormField('name', result.name);
-            fillFormField('ktp', result.nik);
-            fillFormField('placeOfBirth', result.birthPlace);
-            fillFormField('dateOfBirth', result.birthDate);
-            fillFormField('gender', result.gender === 'LAKI-LAKI' ? 'M' : 
-                                  result.gender === 'PEREMPUAN' ? 'F' : '');
-            fillFormField('address', result.address);
-            
-            document.getElementById('ktpPhotoPath').value = result.imageUrl;
-        } else {
-            throw new Error(data.message);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Gagal membaca data KTP secara otomatis. Silakan isi form secara manual.');
-    }
-}
-
-function fillFormField(id, value) {
-    const field = document.getElementById(id);
-    if (field && value) {
-        field.value = value;
-        field.classList.add('auto-filled');
-        field.classList.add('is-valid');
-    }
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Cek jika ada flash message success
-    @if(session('success'))
-        // Tampilkan modal
-        var successModal = new bootstrap.Modal(document.getElementById('successModal'));
-        successModal.show();
-    @endif
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.querySelector('form');
-    const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
-    
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        try {
-            // Tampilkan loading modal
-            loadingModal.show();
-            
-            // Disable submit button
-            const submitBtn = this.querySelector('button[type="submit"]');
-            submitBtn.disabled = true;
-            
-            // Submit form
-            const formData = new FormData(this);
-            const response = await fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            });
-            
-            const result = await response.json();
-            
-            // Sembunyikan loading modal
-            loadingModal.hide();
-            
-            if (result.success) {
-                // Tampilkan success modal
-                const successModal = new bootstrap.Modal(document.getElementById('successModal'));
-                successModal.show();
-            } else {
-                throw new Error(result.error || 'Terjadi kesalahan saat memproses data');
-            }
-            
-        } catch (error) {
-            // Sembunyikan loading modal
-            loadingModal.hide();
-            
-            // Enable kembali submit button
-            submitBtn.disabled = false;
-            
-            // Tampilkan pesan error
-            alert(error.message || 'Terjadi kesalahan. Silakan coba lagi.');
-        }
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Tampilkan modal saat halaman dimuat
-    const termsModal = new bootstrap.Modal(document.getElementById('termsModal'));
-    termsModal.show();
-
-    // Fungsi untuk mengecek status checkbox
-    function checkAgreements() {
-        const privacyChecked = document.getElementById('privacyCheck').checked;
-        const agreementChecked = document.getElementById('agreementCheck').checked;
-        document.getElementById('agreeButton').disabled = !(privacyChecked && agreementChecked);
-    }
-
-    // Event listener untuk checkbox
-    document.getElementById('privacyCheck').addEventListener('change', checkAgreements);
-    document.getElementById('agreementCheck').addEventListener('change', checkAgreements);
-
-    // Event listener untuk tombol Setuju
-    document.getElementById('agreeButton').addEventListener('click', function() {
-        termsModal.hide();
-        // Tampilkan form registrasi
-        document.querySelector('.container').style.display = 'block';
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const privacyCheck = document.getElementById('privacyCheck');
-    const privacyPolicyModal = new bootstrap.Modal(document.getElementById('privacyPolicyModal'));
-    
-    // Event ketika checkbox privasi diklik
-    privacyCheck.addEventListener('click', function(e) {
-        e.preventDefault();
-        privacyPolicyModal.show();
-    });
-
-    // Event ketika tombol Setuju diklik
-    document.getElementById('agreePrivacyPolicy').addEventListener('click', function() {
-        privacyCheck.checked = true;
-        privacyPolicyModal.hide();
-        checkAgreements();
-    });
-
-    // Event ketika tombol Kembali diklik
-    document.querySelector('.modal-footer .btn-secondary').addEventListener('click', function() {
-        window.history.back();
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const modalBody = document.querySelector('#privacyPolicyModal .modal-body');
-    const agreeButton = document.getElementById('agreePrivacyPolicy');
-    let hasReachedBottom = false;
-
-    // Fungsi untuk mengecek apakah user sudah scroll sampai bawah
-    function checkScrollPosition() {
-        const scrollPosition = modalBody.scrollTop + modalBody.clientHeight;
-        const scrollHeight = modalBody.scrollHeight;
-        
-        // Toleransi 10px untuk mengatasi perbedaan perhitungan di berbagai browser
-        if (scrollHeight - scrollPosition <= 10) {
-            hasReachedBottom = true;
-            agreeButton.disabled = false;
-        }
-    }
-
-    // Event listener untuk scroll
-    modalBody.addEventListener('scroll', checkScrollPosition);
-
-    // Reset status saat modal dibuka
-    document.getElementById('privacyPolicyModal').addEventListener('show.bs.modal', function() {
-        hasReachedBottom = false;
-        agreeButton.disabled = true;
-        modalBody.scrollTop = 0;
-    });
-});
-</script>
-@endpush
-
-@push('styles')
-<style>
-.preview-wrapper {
-    min-height: 0;
-    padding: 0;
-    margin: 0;
-}
-
-.preview-wrapper:empty {
-    display: none !important;
-}
-
-.preview-image {
-    width: auto;
-    height: auto;
-    max-height: 150px;
-    object-fit: contain;
-    border: 1px solid #dee2e6;
-    padding: 0.25rem;
-    background-color: #fff;
-    cursor: default;
-}
-
-.input-group {
-    margin-bottom: 8px;
-}
-
-.auto-filled {
-    background-color: #e8f0fe !important;
-    transition: background-color 0.3s ease;
-}
-
-/* Tambahkan style untuk icon */
-.alert i {
-    font-size: 1.2rem;
-}
-
-.alert hr {
-    margin: 0.5rem 0;
-}
-
-.navbar-logo {
-    height: 40px;
-    width: auto;
-    object-fit: contain;
-}
-
-.divider {
-    height: 40px;
-    width: 1px;
-    background-color: #dee2e6;
-    display: inline-block;
-    margin: 0 1rem;
-}
-
-@media (max-width: 480px) {
-    .navbar-logo {
-        height: 35px;
-    }
-    
-    .divider {
-        margin: 0 0.5rem;
-    }
-}
-
-.modal-content {
-    border-radius: 15px;
-    border: none;
-}
-
-.modal-body {
-    padding: 2rem;
-}
-
-.bi-check-circle-fill {
-    color: #198754;
-    filter: drop-shadow(0 0 10px rgba(25, 135, 84, 0.3));
-}
-
-.btn-lg {
-    padding: 12px 24px;
-    font-size: 1.1rem;
-    border-radius: 8px;
-}
-
-/* Styling untuk loading modal */
-.modal-content {
-    border: none;
-    border-radius: 15px;
-}
-
-.spinner-border {
-    width: 3rem;
-    height: 3rem;
-}
-
-/* Animasi fade untuk modal */
-.modal.fade .modal-dialog {
-    transition: transform .3s ease-out;
-    transform: scale(0.95);
-}
-
-.modal.show .modal-dialog {
-    transform: scale(1);
-}
-
-/* Style untuk disabled button */
-button:disabled {
-    cursor: not-allowed;
-    opacity: 0.7;
-}
-
-/* Sembunyikan container form saat awal */
-
-
-/* Style untuk modal */
-.modal-dialog-scrollable .modal-content {
-    border-radius: 15px;
-}
-
-.modal-body {
-    padding: 1.5rem;
-}
-
-.form-check {
-    margin-top: 1rem;
-}
-
-.btn {
-    padding: 0.5rem 1.5rem;
-    border-radius: 8px;
-}
-
-#agreeButton:disabled {
-    cursor: not-allowed;
-}
-
-/* Styling untuk modal kebijakan privasi */
-.privacy-content {
-    font-size: 14px;
-    line-height: 1.6;
-}
-
-.privacy-content h6 {
-    margin-top: 1.5rem;
-    margin-bottom: 1rem;
-    font-weight: 600;
-}
-
-.privacy-content ul {
-    padding-left: 1.5rem;
-}
-
-.privacy-content li {
-    margin-bottom: 0.5rem;
-}
-
-.modal-dialog-scrollable .modal-content {
-    max-height: 90vh;
-}
-
-.modal-body {
-    padding: 1.5rem;
-}
-
-.modal-footer {
-    border-top: 1px solid #dee2e6;
-    padding: 1rem 2rem;
-}
-
-.modal-footer .btn {
-    min-width: 120px;
-    font-weight: 500;
-}
-
-.modal-footer .btn-secondary {
-    background-color: #6c757d;
-    border-color: #6c757d;
-}
-
-.modal-footer .btn-primary {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
-}
-
-.modal-body ul {
-    list-style-type: none;
-    padding-left: 1.5rem;
-}
-
-.modal-body li {
-    margin-bottom: 0.75rem;
-    text-align: justify;
-}
-
-.modal-body li strong {
-    margin-right: 0.5rem;
-}
-
-.section {
-    margin-bottom: 1.5rem;
-}
-
-.section-title {
-    font-weight: 700;
-    font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-    color: #333;
-    padding-left: 1px;
-    display: flex;
-    align-items: center;
-}
-
-.section-number {
-    margin-right: 0.75rem; /* Menambah jarak antara nomor dan judul */
-}
-
-.section-heading {
-    flex: 1;
-}
-
-.section-content {
-    padding-left: 30px;
-}
-
-.section-intro {
-    margin-bottom: 0.1rem; /* Dikurangi dari 1rem */
-}
-
-.custom-list {
-    list-style: none;
-    padding-left: 0;
-    margin-top: 0.1rem; /* Ditambahkan untuk mengatur jarak dari paragraf di atasnya */
-}
-
-.custom-list li {
-    display: flex;
-    margin-bottom: 0.1rem; /* Dikurangi dari 0.75rem */
-    align-items: flex-start;
-}
-
-.list-marker {
-    flex: 0 0 30px;
-    padding-right: 5px;
-}
-
-.list-content {
-    flex: 1;
-    padding-left: 5px;
-}
-
-
-
-.term {
-    font-weight: 700;
-    color: #333;
-}
-
-.contact-info {
-    margin: 10px 0;
-}
-
-.contact-table {
-    border-spacing: 0;
-    border-collapse: collapse;
-    line-height: 1.2; /* Mengurangi line height */
-}
-
-.contact-table td {
-    padding: 2px 0; /* Mengurangi padding vertikal */
-    vertical-align: top;
-}
-
-.contact-table br {
-    line-height: 1.2; /* Mengurangi jarak antar baris pada alamat */
-}
-
-.modal-body {
-    max-height: 70vh;
-    overflow-y: auto;
-}
-
-#agreePrivacyPolicy:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-/* Tambahkan indikator scroll */
-.modal-body::-webkit-scrollbar {
-    width: 8px;
-}
-
-.modal-body::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
-}
-
-.modal-body::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
-}
-
-.modal-body::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
-
-
-
-/* Styling untuk tabel kontak */
-.contact-info {
-    margin: 15px 0;
-    margin-bottom: 0.1rem;
-}
-
-.contact-table {
-    border-spacing: 0;
-    border-collapse: collapse;
-}
-
-.contact-table td {
-    padding: 5px 0;
-    vertical-align: top;
-}
-
-.text-blue {
-        color: blue;
-        font-weight: bold; /* Opsional, jika ingin teks lebih menonjol */
-    }
-
-</style>
+<script src="{{ asset('js/registration.js') }}"></script>
 @endpush 
