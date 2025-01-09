@@ -2,6 +2,8 @@
 
 @push('styles')
     <link href="{{ asset('css/registration.css') }}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
 @endpush
 
 @section('content')
@@ -288,23 +290,6 @@
                         </div>
                     </form>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-body text-center p-4">
-                <div class="mb-4">
-                    <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
-                </div>
-                <h4 class="mb-3">Registrasi Berhasil!</h4>
-                <a href="{{ route('video-verification.index') }}" class="btn btn-primary btn-lg w-100">
-                    <i class="bi bi-camera-video me-2"></i>
-                    Lanjutkan Verifikasi Wajah
-                </a>
             </div>
         </div>
     </div>
@@ -664,39 +649,10 @@
     </div>
 </div>
 
-<!-- Modal OTP Verification -->
-<div class="modal fade" id="otpModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header flex-column align-items-center">
-                <div class="modal-logo mb-3">
-                    <img src="{{ asset('images/logo.png') }}" alt="Logo Peruri" style="height: 35px;">
-                </div>
-                <h5 class="modal-title" id="otpModalLabel">Verifikasi Nomor Handphone</h5>
-            </div>
-            <div class="modal-body">
-                <div class="text-center mb-4">
-                    <p>Kode OTP telah dikirim ke nomor, cek pesan anda:</p>
-                    <h5 class="phone-display mb-0"></h5>
-                </div>
-                <div class="form-group mb-3">
-                    <label for="otp" class="form-label">Masukkan Kode OTP</label>
-                    <input type="text" class="form-control form-control-lg text-center" id="otpInput" maxlength="6" placeholder="000000">
-                    <small class="text-muted d-block text-center mt-2">Kode OTP akan kadaluarsa dalam <span id="otpTimer">05:00</span></small>
-                </div>
-                <div class="d-grid gap-2">
-                    <button type="button" class="btn btn-primary" id="verifyOtpBtn">Verifikasi</button>
-                    <button type="button" class="btn btn-outline-primary" id="resendOtpBtn" disabled>
-                        Kirim Ulang OTP (<span id="resendTimer">60</span>)
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 @endsection
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
 <script src="{{ asset('js/registration.js') }}"></script>
 @endpush 

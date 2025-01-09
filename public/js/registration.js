@@ -1,363 +1,405 @@
+// Sembunyikan form registrasi saat halaman dimuat
 document.addEventListener('DOMContentLoaded', function() {
-    // Sembunyikan container form saat awal
-    const container = document.querySelector('.container');
-    if (container) {
-        container.style.display = 'none';
+    // Inisialisasi form dan sembunyikan
+    const registrationForm = document.querySelector('form');
+    if (registrationForm) {
+        registrationForm.style.display = 'none';
     }
     
-    // Inisialisasi semua modal
-    const termsModal = new bootstrap.Modal(document.getElementById('termsModal'), {
-        backdrop: 'static',
-        keyboard: false
-    });
-    
-    const privacyPolicyModal = new bootstrap.Modal(document.getElementById('privacyPolicyModal'), {
-        backdrop: 'static',
-        keyboard: false
-    });
-    
-    const customerAgreementModal = new bootstrap.Modal(document.getElementById('customerAgreementModal'), {
-        backdrop: 'static',
-        keyboard: false
-    });
+    // Tampilkan modal syarat dan ketentuan saat halaman dimuat
+    const termsModal = new bootstrap.Modal(document.getElementById('termsModal'));
+    termsModal.show();
 
-    // Inisialisasi checkbox dan button elements
+    // Fungsi untuk mengecek scroll di modal
+    function handleModalScroll(modalId, buttonId) {
+        const modalBody = document.querySelector(`#${modalId} .modal-body`);
+        const agreeButton = document.querySelector(`#${buttonId}`);
+        
+        if (!modalBody || !agreeButton) {
+            console.log('Modal elements not found:', modalId, buttonId);
+            return;
+        }
+
+        // Reset button state dan scroll position
+        agreeButton.disabled = true;
+        modalBody.scrollTop = 0;
+        modalBody.classList.remove('scrolled');
+
+        function scrollHandler() {
+            const scrollPosition = modalBody.scrollTop + modalBody.offsetHeight;
+            const scrollHeight = modalBody.scrollHeight;
+            
+            if (scrollHeight - scrollPosition <= 30) {
+                agreeButton.disabled = false;
+                modalBody.classList.add('scrolled');
+                modalBody.removeEventListener('scroll', scrollHandler);
+            }
+        }
+
+        modalBody.addEventListener('scroll', scrollHandler);
+        
+        // Cek initial scroll
+        setTimeout(scrollHandler, 100);
+    }
+
+    // Event listeners untuk checkbox
     const privacyCheck = document.getElementById('privacyCheck');
     const agreementCheck = document.getElementById('agreementCheck');
-    const agreeButton = document.getElementById('agreeButton');
+    let privacyModalShown = false;
+    let agreementModalShown = false;
 
-    // Reset form visibility dan checkbox state
-    if (container) container.style.display = 'none';
-    if (privacyCheck) privacyCheck.checked = false;
-    if (agreementCheck) agreementCheck.checked = false;
-
-    // Event handlers untuk checkbox
     if (privacyCheck) {
         privacyCheck.addEventListener('click', function(e) {
-            e.preventDefault();
-            privacyPolicyModal.show();
+            if (!privacyModalShown) {
+                e.preventDefault(); // Prevent checkbox from being checked
+                const privacyModal = new bootstrap.Modal(document.getElementById('privacyPolicyModal'));
+                privacyModal.show();
+                
+                // Setup modal event handlers
+                document.getElementById('privacyPolicyModal').addEventListener('shown.bs.modal', function() {
+                    handleModalScroll('privacyPolicyModal', 'agreePrivacyPolicy');
+                });
+            }
         });
     }
-    
+
     if (agreementCheck) {
         agreementCheck.addEventListener('click', function(e) {
-            e.preventDefault();
-            customerAgreementModal.show();
+            if (!agreementModalShown) {
+                e.preventDefault(); // Prevent checkbox from being checked
+                const agreementModal = new bootstrap.Modal(document.getElementById('customerAgreementModal'));
+                agreementModal.show();
+                
+                // Setup modal event handlers
+                document.getElementById('customerAgreementModal').addEventListener('shown.bs.modal', function() {
+                    handleModalScroll('customerAgreementModal', 'agreeCustomerAgreement');
+                });
+            }
         });
-    }
-
-    // Fungsi untuk mengaktifkan tombol setuju di modal Privacy Policy
-    const privacyPolicyModalElement = document.getElementById('privacyPolicyModal');
-    if (privacyPolicyModalElement) {
-        const modalBody = privacyPolicyModalElement.querySelector('.modal-body');
-        const agreePrivacyButton = privacyPolicyModalElement.querySelector('#agreePrivacyPolicy');
-        
-        if (modalBody && agreePrivacyButton) {
-            agreePrivacyButton.disabled = true;
-            
-            modalBody.addEventListener('scroll', function() {
-                const isAtBottom = 
-                    Math.abs(modalBody.scrollHeight - modalBody.scrollTop - modalBody.clientHeight) < 1;
-                if (isAtBottom) {
-                    agreePrivacyButton.disabled = false;
-                }
-            });
-        }
-    }
-
-    // Fungsi untuk mengaktifkan tombol setuju di modal Customer Agreement
-    const customerAgreementModalElement = document.getElementById('customerAgreementModal');
-    if (customerAgreementModalElement) {
-        const modalBody = customerAgreementModalElement.querySelector('.modal-body');
-        const agreeCustomerButton = customerAgreementModalElement.querySelector('#agreeCustomerAgreement');
-        
-        if (modalBody && agreeCustomerButton) {
-            agreeCustomerButton.disabled = true;
-            
-            modalBody.addEventListener('scroll', function() {
-                const isAtBottom = 
-                    Math.abs(modalBody.scrollHeight - modalBody.scrollTop - modalBody.clientHeight) < 1;
-                if (isAtBottom) {
-                    agreeCustomerButton.disabled = false;
-                }
-            });
-        }
     }
 
     // Event handlers untuk tombol setuju di modal
-    const agreePrivacyButton = document.getElementById('agreePrivacyPolicy');
-    if (agreePrivacyButton) {
-        agreePrivacyButton.addEventListener('click', function() {
-            if (privacyCheck) privacyCheck.checked = true;
-            privacyPolicyModal.hide();
-            checkAgreements();
-        });
-    }
+    document.getElementById('agreePrivacyPolicy')?.addEventListener('click', function() {
+        privacyModalShown = true;
+        const modal = bootstrap.Modal.getInstance(document.getElementById('privacyPolicyModal'));
+        modal?.hide();
+        privacyCheck.checked = true;
+        updateMainAgreeButton();
+    });
 
-    const agreeCustomerButton = document.getElementById('agreeCustomerAgreement');
-    if (agreeCustomerButton) {
-        agreeCustomerButton.addEventListener('click', function() {
-            if (agreementCheck) agreementCheck.checked = true;
-            customerAgreementModal.hide();
-            checkAgreements();
-        });
-    }
+    document.getElementById('agreeCustomerAgreement')?.addEventListener('click', function() {
+        agreementModalShown = true;
+        const modal = bootstrap.Modal.getInstance(document.getElementById('customerAgreementModal'));
+        modal?.hide();
+        agreementCheck.checked = true;
+        updateMainAgreeButton();
+    });
 
-    // Fungsi untuk mengecek status checkbox
-    function checkAgreements() {
-        if (privacyCheck && agreementCheck && agreeButton) {
+    // Fungsi untuk update status tombol setuju utama
+    function updateMainAgreeButton() {
+        const agreeButton = document.getElementById('agreeButton');
+        if (agreeButton) {
             agreeButton.disabled = !(privacyCheck.checked && agreementCheck.checked);
         }
     }
 
     // Event handler untuk tombol setuju utama
-    if (agreeButton) {
-        agreeButton.addEventListener('click', function() {
-            sessionStorage.setItem('hasAgreedToTerms', 'true');
-            termsModal.hide();
-            if (container) {
-                container.style.display = 'block';
-            }
-        });
-    }
-
-    // Reset status tombol saat modal ditutup
-    if (privacyPolicyModalElement) {
-        privacyPolicyModalElement.addEventListener('hidden.bs.modal', function() {
-            const agreePrivacyButton = this.querySelector('#agreePrivacyPolicy');
-            if (agreePrivacyButton) {
-                agreePrivacyButton.disabled = true;
-            }
-        });
-    }
-
-    if (customerAgreementModalElement) {
-        customerAgreementModalElement.addEventListener('hidden.bs.modal', function() {
-            const agreeCustomerButton = this.querySelector('#agreeCustomerAgreement');
-            if (agreeCustomerButton) {
-                agreeCustomerButton.disabled = true;
-            }
-        });
-    }
-
-    // Tampilkan terms modal saat halaman dimuat
-    setTimeout(() => {
-        termsModal.show();
-    }, 100);
-
-    // Inisialisasi status checkbox
-    checkAgreements();
-
-    // Tangkap form submit dan tampilkan modal OTP
-    const form = document.querySelector('form');
-    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
-    const otpModal = new bootstrap.Modal(document.getElementById('otpModal'));
-    let formData = null;
-
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
+    document.getElementById('agreeButton')?.addEventListener('click', function() {
+        const termsModal = bootstrap.Modal.getInstance(document.getElementById('termsModal'));
+        termsModal?.hide();
         
-        try {
-            const phoneNumber = document.getElementById('phone').value;
-            console.log('Attempting to send OTP to:', phoneNumber);
-            
-            const requestBody = { phone_number: phoneNumber };
-            console.log('Request body:', requestBody);
-            
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-            console.log('CSRF Token:', csrfToken ? 'Present' : 'Missing');
+        // Tampilkan form registrasi
+        if (registrationForm) {
+            registrationForm.style.display = 'block';
+            registrationForm.style.opacity = '0';
+            setTimeout(() => {
+                registrationForm.style.transition = 'opacity 0.5s ease-in';
+                registrationForm.style.opacity = '1';
+            }, 100);
+        }
+    });
 
-            const response = await fetch('/verify/send-otp', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                body: JSON.stringify(requestBody)
+    // Event listener untuk tombol daftar
+    const submitButton = document.querySelector('button[type="submit"]');
+    if (submitButton) {
+        submitButton.addEventListener('click', async function(e) {
+            e.preventDefault();
+            console.log('Submit button clicked');
+
+            if (!validateForm()) {
+                return false;
+            }
+
+            // Tampilkan loading
+            Swal.fire({
+                title: 'Mohon Tunggu',
+                html: 'Sedang memproses pendaftaran...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
             });
-            
-            console.log('Response status:', response.status);
-            console.log('Response headers:', {
-                contentType: response.headers.get('content-type'),
-                csrf: response.headers.get('x-csrf-token')
-            });
 
-            // Get raw response text first
-            const responseText = await response.text();
-            console.log('Raw response:', responseText);
-
-            // Try to parse JSON
-            let data;
             try {
-                data = JSON.parse(responseText);
-                console.log('Parsed response data:', data);
-            } catch (parseError) {
-                console.error('JSON parse error:', parseError);
-                throw new Error('Invalid JSON response: ' + responseText.substring(0, 100));
+                const form = document.querySelector('form');
+                const formData = new FormData(form);
+                const emailInput = document.getElementById('email');
+                const emailValue = emailInput?.value || '';
+
+                // Debug: Log form data
+                for (let pair of formData.entries()) {
+                    console.log(pair[0] + ': ' + pair[1]);
+                }
+
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    redirect: 'follow'
+                });
+
+                // Debug: Log response details
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+
+                let result;
+                const responseText = await response.text();
+                console.log('Raw response:', responseText);
+
+                try {
+                    result = JSON.parse(responseText);
+                } catch (jsonError) {
+                    console.error('JSON Parse Error:', jsonError);
+                    throw new Error('Response tidak valid: ' + responseText.substring(0, 100));
+                }
+
+                if (result.success) {
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'Registrasi Berhasil!',
+                        html: `
+                            <div class="text-center">
+                                <div class="mb-4">
+                                    <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                                </div>
+                                <p class="mb-4">Data Anda telah berhasil terdaftar di Peruri</p>
+                                <div class="d-grid gap-2">
+                                    <button class="btn btn-primary btn-lg proceed-verification">
+                                        <i class="bi bi-camera-video me-2"></i>
+                                        Lanjutkan Verifikasi Wajah
+                                    </button>
+                                </div>
+                            </div>
+                        `,
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        customClass: {
+                            popup: 'animated fadeInDown',
+                            container: 'custom-swal-container'
+                        },
+                        didRender: () => {
+                            // Tambahkan event listener untuk tombol verifikasi
+                            document.querySelector('.proceed-verification').addEventListener('click', function() {
+                                window.location.href = '/video-verification';
+                            });
+                        }
+                    });
+
+                    // Tambahkan animasi CSS
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        .custom-swal-container {
+                            z-index: 1500;
+                        }
+                        .animated {
+                            animation-duration: 0.5s;
+                            animation-fill-mode: both;
+                        }
+                        @keyframes fadeInDown {
+                            from {
+                                opacity: 0;
+                                transform: translate3d(0, -20%, 0);
+                            }
+                            to {
+                                opacity: 1;
+                                transform: translate3d(0, 0, 0);
+                            }
+                        }
+                        .fadeInDown {
+                            animation-name: fadeInDown;
+                        }
+                        .proceed-verification {
+                            background-color: #0d6efd;
+                            border: none;
+                            padding: 15px 25px;
+                            font-size: 1.1rem;
+                            transition: all 0.3s ease;
+                        }
+                        .proceed-verification:hover {
+                            background-color: #0b5ed7;
+                            transform: translateY(-2px);
+                            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15);
+                        }
+                        .bi-camera-video {
+                            font-size: 1.2rem;
+                            vertical-align: middle;
+                        }
+                    `;
+                    document.head.appendChild(style);
+                } else {
+                    let errorMessage = result.message || 'Terjadi kesalahan saat memproses pendaftaran';
+                    let errorTitle = 'Registrasi Gagal';
+                    let errorIcon = 'error';
+                    
+                    if (result.message && (
+                        result.message.includes('Email Already Registered') || 
+                        result.message.toLowerCase().includes('email sudah terdaftar')
+                    )) {
+                        errorTitle = 'Email Sudah Terdaftar';
+                        errorMessage = `Email <strong>${emailValue}</strong> telah terdaftar sebelumnya.<br>Silakan gunakan alamat email lain.`;
+                        errorIcon = 'warning';
+                        
+                        emailInput?.classList.add('is-invalid');
+                        emailInput?.focus();
+                    }
+
+                    await Swal.fire({
+                        icon: errorIcon,
+                        title: errorTitle,
+                        html: errorMessage,
+                        confirmButtonText: 'Tutup',
+                        confirmButtonColor: '#dc3545'
+                    });
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                
+                // Tampilkan error yang lebih detail
+                let errorMessage = 'Terjadi kesalahan saat menghubungi server.';
+                let errorDetail = error.message || '';
+                
+                if (errorDetail.includes('<!DOCTYPE')) {
+                    errorMessage = 'Server mengalami masalah internal.';
+                    errorDetail = 'Mohon coba beberapa saat lagi.';
+                }
+
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Terjadi Kesalahan',
+                    html: `
+                        <div class="text-start">
+                            <p>${errorMessage}</p>
+                            <small class="text-muted">${errorDetail}</small>
+                        </div>
+                    `,
+                    confirmButtonText: 'Tutup',
+                    confirmButtonColor: '#dc3545'
+                });
+            } finally {
+                // Pastikan loading modal tertutup
+                Swal.close();
             }
-
-            if (!response.ok) {
-                console.error('Response not OK:', data);
-                throw new Error(data.error || 'Terjadi kesalahan saat mengirim OTP');
-            }
-            
-            console.log('OTP sent successfully:', data);
-            otpModal.show();
-            startOtpTimer();
-            startResendTimer();
-            
-        } catch (error) {
-            console.error('Full error details:', {
-                message: error.message,
-                name: error.name,
-                stack: error.stack,
-                response: error.response
-            });
-            
-            // Show more detailed error message
-            alert('Gagal mengirim OTP: ' + (error.message || 'Unknown error'));
-        }
-    });
-
-    // Fungsi timer OTP
-    function startOtpTimer() {
-        let timeLeft = 300; // 5 menit
-        const timerDisplay = document.getElementById('otpTimer');
-        
-        const timer = setInterval(() => {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            
-            timerDisplay.textContent = 
-                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-            
-            if (timeLeft <= 0) {
-                clearInterval(timer);
-                alert('Kode OTP telah kadaluarsa. Silakan coba lagi.');
-                otpModal.hide();
-            }
-            
-            timeLeft--;
-        }, 1000);
-    }
-
-    // Fungsi timer untuk tombol kirim ulang
-    function startResendTimer() {
-        let timeLeft = 60;
-        const resendBtn = document.getElementById('resendOtpBtn');
-        const timerDisplay = document.getElementById('resendTimer');
-        
-        resendBtn.disabled = true;
-        
-        const timer = setInterval(() => {
-            timerDisplay.textContent = timeLeft;
-            
-            if (timeLeft <= 0) {
-                clearInterval(timer);
-                resendBtn.disabled = false;
-                timerDisplay.textContent = '60';
-            }
-            
-            timeLeft--;
-        }, 1000);
-    }
-
-    // Event listener untuk verifikasi OTP
-    document.getElementById('verifyOtpBtn').addEventListener('click', async function() {
-        const otpInput = document.getElementById('otpInput');
-        const phoneNumber = document.getElementById('phone').value;
-        
-        try {
-            const response = await fetch('/verify/verify-otp', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: JSON.stringify({
-                    phone_number: phoneNumber,
-                    otp: otpInput.value
-                })
-            });
-
-            const data = await response.json();
-            
-            if (!response.ok) {
-                throw new Error(data.error || 'Verifikasi gagal');
-            }
-
-            alert('Verifikasi berhasil!');
-            otpModal.hide();
-            // Lanjutkan ke langkah berikutnya
-            
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Gagal memverifikasi OTP: ' + error.message);
-        }
-    });
-
-    // Event listener untuk kirim ulang OTP
-    document.getElementById('resendOtpBtn').addEventListener('click', async function() {
-        const phoneNumber = document.getElementById('phone').value;
-        
-        try {
-            const response = await fetch('/verify/send-otp', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                },
-                body: JSON.stringify({ phone_number: phoneNumber })
-            });
-
-            const data = await response.json();
-            
-            if (!response.ok) {
-                throw new Error(data.error || 'Gagal mengirim ulang OTP');
-            }
-
-            startResendTimer();
-            alert('Kode OTP baru telah dikirim');
-            
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Gagal mengirim ulang OTP: ' + error.message);
-        }
-    });
-
-    // Fungsi preview untuk KTP
-    function previewImage(input, previewId, containerId) {
-        const preview = document.getElementById(previewId);
-        const container = document.getElementById(containerId);
-        
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                container.style.display = 'block';
-            }
-            
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    // Event listener untuk input KTP
-    const ktpInput = document.getElementById('ktpPhoto');
-    if (ktpInput) {
-        ktpInput.addEventListener('change', function() {
-            previewImage(this, 'ktpPreview', 'previewContainer');
         });
     }
 
-    // Event listener untuk input selfie
-    const selfieInput = document.getElementById('selfiePhoto');
-    if (selfieInput) {
-        selfieInput.addEventListener('change', function() {
-            previewImage(this, 'selfiePreview', 'selfiePreviewContainer');
+    // Event listener untuk email input
+    const emailInput = document.getElementById('email');
+    if (emailInput) {
+        emailInput.addEventListener('input', function() {
+            this.classList.remove('is-invalid');
         });
     }
-}); 
+
+    // Fungsi untuk validasi form
+    function validateForm() {
+        const form = document.querySelector('form');
+        if (!form) {
+            console.log('Form not found');
+            return false;
+        }
+
+        const requiredFields = form.querySelectorAll('[required]');
+        let isValid = true;
+        let emptyFields = [];
+
+        // Reset validasi sebelumnya
+        requiredFields.forEach(field => {
+            field.classList.remove('is-invalid');
+            
+            if (!field.value.trim()) {
+                console.log('Empty field found:', field.name);
+                isValid = false;
+                field.classList.add('is-invalid');
+                
+                // Ambil label field
+                const label = field.previousElementSibling;
+                const fieldName = label ? label.textContent.replace('*', '').trim() : field.name;
+                emptyFields.push(fieldName);
+            }
+        });
+
+        if (!isValid) {
+            // Buat list field yang kosong
+            const emptyFieldsList = emptyFields.map(field => `<li>${field}</li>`).join('');
+            
+            // Tampilkan SweetAlert
+            Swal.fire({
+                icon: 'error',
+                title: 'Data Belum Lengkap!',
+                html: `
+                    <div class="text-start">
+                        <p>Mohon lengkapi data berikut:</p>
+                        <ul class="text-start">
+                            ${emptyFieldsList}
+                        </ul>
+                    </div>
+                `,
+                confirmButtonText: 'Periksa Kembali',
+                confirmButtonColor: '#dc3545',
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Scroll ke field pertama yang invalid
+                    const firstInvalidField = document.querySelector('.is-invalid');
+                    if (firstInvalidField) {
+                        firstInvalidField.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                        firstInvalidField.focus();
+                    }
+                }
+            });
+
+            return false;
+        }
+
+        return true;
+    }
+
+    // Event listener untuk input fields
+    document.querySelectorAll('form [required]').forEach(field => {
+        field.addEventListener('input', function() {
+            this.classList.remove('is-invalid');
+        });
+    });
+});
+
+// Tambahkan CSS yang lebih sederhana untuk indikator scroll
+document.head.insertAdjacentHTML('beforeend', `
+    <style>
+        .modal-body {
+            overflow-y: auto;
+            max-height: 70vh; /* Batasi tinggi modal */
+        }
+    </style>
+`); 

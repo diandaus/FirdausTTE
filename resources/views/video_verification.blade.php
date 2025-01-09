@@ -254,329 +254,275 @@
         }
     </style>
     <script>
-        // Cek apakah di localhost atau jaringan lokal
-        const isLocalNetwork = window.location.hostname === 'localhost' || 
-                              window.location.hostname === '127.0.0.1' ||
-                              window.location.hostname.match(/^192\.168\./);
+    const isLocalNetwork = window.location.hostname === 'localhost' || 
+                          window.location.hostname === '127.0.0.1' ||
+                          window.location.hostname.match(/^192\.168\./);
 
-        async function setupCamera() {
-            try {
-                // Tambahkan opsi khusus untuk jaringan lokal
-                let constraints = {
-                    video: {
-                        width: { ideal: 640 },
-                        height: { ideal: 480 },
-                        facingMode: "user"
-                    },
-                    audio: false
-                };
+    async function setupCamera() {
+        try {
+            let constraints = {
+                video: {
+                    width: { ideal: 640 },
+                    height: { ideal: 480 },
+                    facingMode: "user"
+                },
+                audio: false
+            };
 
-                // Jika di jaringan lokal, tambahkan opsi ini
-                if (isLocalNetwork) {
-                    constraints.video.optional = [
-                        { facingMode: "user" },
-                        { allowHTTP: true }  // Izinkan HTTP untuk development
-                    ];
-                }
-
-                const stream = await navigator.mediaDevices.getUserMedia(constraints);
-                const video = document.getElementById('video');
-                video.srcObject = stream;
-                
-                // Tambahkan event listener untuk memastikan video sudah siap
-                video.onloadedmetadata = () => {
-                    video.play();
-                };
-
-                return stream;
-            } catch (error) {
-                console.error('Error:', error);
-                if (error.name === 'NotAllowedError') {
-                    alert('Izin kamera ditolak. Silakan izinkan akses kamera di pengaturan browser Anda.');
-                } else if (error.name === 'NotFoundError') {
-                    alert('Kamera tidak ditemukan.');
-                } else {
-                    alert('Error mengakses kamera: ' + error.message);
-                }
-                throw error;
-            }
-        }
-
-        // Fungsi untuk mengecek dukungan browser
-        function checkBrowserSupport() {
-            // Cek apakah browser mendukung getUserMedia
-            if (!navigator.mediaDevices && !navigator.getUserMedia && 
-                !navigator.webkitGetUserMedia && !navigator.mozGetUserMedia) {
-                alert('Browser Anda tidak mendukung akses kamera. Silakan gunakan browser terbaru seperti:\n\n' +
-                      '- Google Chrome versi 47+\n' +
-                      '- Firefox versi 44+\n' +
-                      '- Safari versi 11+\n' +
-                      '- Edge versi 12+\n\n' +
-                      'Atau coba akses melalui smartphone Anda.');
-                return false;
-            }
-            return true;
-        }
-
-        // Polyfill untuk browser lama
-        if (navigator.mediaDevices === undefined) {
-            navigator.mediaDevices = {};
-        }
-
-        // Polyfill untuk getUserMedia
-        if (navigator.mediaDevices.getUserMedia === undefined) {
-            navigator.mediaDevices.getUserMedia = function(constraints) {
-                const getUserMedia = navigator.webkitGetUserMedia || 
-                                   navigator.mozGetUserMedia ||
-                                   navigator.msGetUserMedia;
-
-                if (!getUserMedia) {
-                    return Promise.reject(new Error('Browser Anda tidak mendukung akses kamera. Silakan gunakan browser terbaru.'));
-                }
-
-                return new Promise(function(resolve, reject) {
-                    getUserMedia.call(navigator, constraints, resolve, reject);
-                });
-            }
-        }
-
-        let mediaRecorder;
-        let recordedChunks = [];
-        let instructions = [
-            "Kedipkan mata Anda",
-            "Kedipkan mata Anda sekali lagi",
-            "Silakan buka mulut Anda",
-            "Tutup mulut Anda kembali"
-        ];
-        let currentInstruction = 0;
-        let instructionInterval;
-        let isRecording = false;
-        let recordingComplete = false;
-
-        async function startCamera() {
-            if (!checkBrowserSupport()) {
-                return;
+            if (isLocalNetwork) {
+                constraints.video.optional = [
+                    { facingMode: "user" },
+                    { allowHTTP: true }
+                ];
             }
 
+            const stream = await navigator.mediaDevices.getUserMedia(constraints);
             const video = document.getElementById('video');
-            
-            try {
-                console.log('Memulai akses kamera...');
-                
-                const stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { 
-                        facingMode: "user",
-                        width: { ideal: 640 },
-                        height: { ideal: 480 }
-                    },
-                    audio: false 
-                });
-                
-                console.log('Akses kamera berhasil:', stream);
-                
-                // Untuk browser lama yang tidak mendukung srcObject
-                try {
-                    video.srcObject = stream;
-                } catch (error) {
-                    // Fallback untuk browser lama
-                    video.src = window.URL.createObjectURL(stream);
-                }
-                
-                video.onloadedmetadata = () => {
-                    console.log('Video metadata loaded');
-                    video.play()
-                        .catch(e => console.error('Error playing video:', e));
-                };
-                
-                video.onerror = (err) => {
-                    console.error('Error pada video element:', err);
-                };
-                
-            } catch (err) {
-                console.error("Error mengakses kamera:", err);
-                
-                let errorMessage = "Tidak dapat mengakses kamera.\n\n";
-                
-                if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
-                    errorMessage += "Mohon berikan izin akses kamera pada browser Anda.";
-                } else if (err.name === 'NotFoundError') {
-                    errorMessage += "Tidak ada kamera yang terdeteksi.";
-                } else if (err.name === 'NotReadableError') {
-                    errorMessage += "Kamera sedang digunakan oleh aplikasi lain.";
-                } else if (err.name === 'ConstraintNotSatisfiedError') {
-                    errorMessage += "Kamera Anda tidak memenuhi persyaratan teknis yang diperlukan.";
-                } else {
-                    errorMessage += err.message;
-                }
-                
-                alert(errorMessage);
-            }
-        }
+            video.srcObject = stream;
 
-        // Tunggu hingga DOM sepenuhnya dimuat
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Halaman dimuat, memulai kamera...');
-            startCamera();
-        });
-
-        function handleAction() {
-            const button = document.getElementById('actionButton');
-            
-            if (!isRecording && !recordingComplete) {
-                // Mulai verifikasi
-                startRecording();
-                button.style.display = 'none'; // Sembunyikan tombol selama verifikasi
-            } else if (recordingComplete) {
-                // Kirim ke Peruri
-                saveRecording();
-            }
-        }
-
-        function startRecording() {
-            isRecording = true;
-            recordingComplete = false;
-            recordedChunks = [];
-            const stream = document.getElementById('video').srcObject;
-            
-            // Konfigurasi MediaRecorder dengan codec yang sesuai
-            const options = {
-                mimeType: 'video/webm;codecs=h264',
-                videoBitsPerSecond: 2500000 // 2.5 Mbps untuk kualitas yang baik
+            video.onloadedmetadata = () => {
+                video.play();
             };
 
-            try {
-                mediaRecorder = new MediaRecorder(stream, options);
-            } catch (e) {
-                // Fallback jika H.264 tidak didukung
-                console.warn('H.264 tidak didukung, menggunakan codec default WebM');
-                mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+            return stream;
+        } catch (error) {
+            console.error('Error:', error);
+            if (error.name === 'NotAllowedError') {
+                alert('Izin kamera ditolak. Silakan izinkan akses kamera di pengaturan browser Anda.');
+            } else if (error.name === 'NotFoundError') {
+                alert('Kamera tidak ditemukan.');
+            } else {
+                alert('Error mengakses kamera: ' + error.message);
             }
-            
-            mediaRecorder.ondataavailable = function(event) {
-                if (event.data.size > 0) {
-                    recordedChunks.push(event.data);
-                }
-            };
-
-            mediaRecorder.start();
-            document.getElementById('recordingStatus').textContent = "Recording...";
-            
-            currentInstruction = 0;
-            showInstruction();
-            instructionInterval = setInterval(showNextInstruction, 3000);
-            speakInstruction(instructions[0]);
+            throw error;
         }
+    }
 
-        function showInstruction() {
-            document.getElementById('currentInstruction').textContent = instructions[currentInstruction];
-            speakInstruction(instructions[currentInstruction]);
+    function checkBrowserSupport() {
+        if (!navigator.mediaDevices && !navigator.getUserMedia && 
+            !navigator.webkitGetUserMedia && !navigator.mozGetUserMedia) {
+            alert('Browser Anda tidak mendukung akses kamera. Silakan gunakan browser terbaru.');
+            return false;
         }
+        return true;
+    }
 
-        function showNextInstruction() {
-            currentInstruction++;
-            if (currentInstruction >= instructions.length) {
-                clearInterval(instructionInterval);
-                completeRecording();
-                return;
+    if (navigator.mediaDevices === undefined) {
+        navigator.mediaDevices = {};
+    }
+
+    if (navigator.mediaDevices.getUserMedia === undefined) {
+        navigator.mediaDevices.getUserMedia = function(constraints) {
+            const getUserMedia = navigator.webkitGetUserMedia || 
+                               navigator.mozGetUserMedia ||
+                               navigator.msGetUserMedia;
+
+            if (!getUserMedia) {
+                return Promise.reject(new Error('Browser Anda tidak mendukung akses kamera.')); 
             }
-            showInstruction();
-        }
 
-        function speakInstruction(text) {
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'id-ID'; // Set bahasa ke Indonesia
-            speechSynthesis.speak(utterance);
-        }
-
-        function completeRecording() {
-            isRecording = false;
-            recordingComplete = true;
-            mediaRecorder.stop();
-            
-            const button = document.getElementById('actionButton');
-            button.textContent = 'Kirim';
-            button.style.display = 'block';
-            button.className = 'stop'; // Menggunakan style tombol merah
-
-            document.getElementById('recordingStatus').textContent = "Verifikasi Selesai";
-            document.getElementById('currentInstruction').textContent = "Silakan klik tombol Kirim";
-        }
-
-        async function saveRecording() {
-            const button = document.getElementById('actionButton');
-            const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
-            const progressBar = document.querySelector('.progress-bar');
-            
-            try {
-                button.disabled = true;
-                loadingModal.show();
-
-                const blob = new Blob(recordedChunks, { 
-                    type: 'video/webm;codecs=h264'
-                });
-                
-                // Simulasi progress upload
-                let progress = 0;
-                const progressInterval = setInterval(() => {
-                    progress += 5;
-                    if (progress <= 90) {
-                        progressBar.style.width = progress + '%';
-                    }
-                }, 200);
-
-                const base64Video = await blobToBase64(blob);
-                const cleanBase64 = base64Video.split(';base64,').pop();
-                
-                const response = await fetch("{{ route('video.verify') }}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        video: cleanBase64
-                    })
-                });
-
-                const result = await response.json();
-
-                // Set progress ke 100% setelah upload selesai
-                clearInterval(progressInterval);
-                progressBar.style.width = '100%';
-
-                // Tunggu sebentar sebelum menampilkan modal sukses
-                await new Promise(resolve => setTimeout(resolve, 500));
-                
-                loadingModal.hide();
-
-                if (result.success) {
-                    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
-                    successModal.show();
-                } else {
-                    throw new Error(result.message || 'Gagal mengirim video verifikasi');
-                }
-
-            } catch (error) {
-                console.error('Error:', error);
-                loadingModal.hide();
-                alert('Gagal mengirim video verifikasi: ' + error.message);
-            } finally {
-                button.disabled = false;
-                button.textContent = 'Kirim';
-            }
-        }
-
-        // Fungsi untuk mengkonversi blob ke base64
-        function blobToBase64(blob) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onloadend = () => resolve(reader.result);
-                reader.onerror = reject;
-                reader.readAsDataURL(blob);
+            return new Promise(function(resolve, reject) {
+                getUserMedia.call(navigator, constraints, resolve, reject);
             });
+        };
+    }
+
+    let mediaRecorder;
+    let recordedChunks = [];
+    let instructions = [
+        "Kedipkan mata Anda",
+        "Kedipkan mata Anda sekali lagi",
+        "Silakan buka mulut Anda",
+        "Tutup mulut Anda kembali"
+    ];
+    let currentInstruction = 0;
+    let instructionInterval;
+    let isRecording = false;
+    let recordingComplete = false;
+
+    async function startCamera() {
+        if (!checkBrowserSupport()) {
+            return;
         }
-    </script>
+
+        const video = document.getElementById('video');
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ 
+                video: { 
+                    facingMode: "user",
+                    width: { ideal: 640 },
+                    height: { ideal: 480 }
+                },
+                audio: false 
+            });
+
+            try {
+                video.srcObject = stream;
+            } catch (error) {
+                video.src = window.URL.createObjectURL(stream);
+            }
+
+            video.onloadedmetadata = () => {
+                video.play().catch(e => console.error('Error playing video:', e));
+            };
+
+            video.onerror = (err) => {
+                console.error('Error pada video element:', err);
+            };
+
+        } catch (err) {
+            console.error("Error mengakses kamera:", err);
+            alert("Error: " + err.message);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        startCamera();
+    });
+
+    function handleAction() {
+        const button = document.getElementById('actionButton');
+
+        if (!isRecording && !recordingComplete) {
+            startRecording();
+            button.style.display = 'none';
+        } else if (recordingComplete) {
+            saveRecording();
+        }
+    }
+
+    function startRecording() {
+        isRecording = true;
+        recordingComplete = false;
+        recordedChunks = [];
+        const stream = document.getElementById('video').srcObject;
+
+        const options = {
+            mimeType: 'video/webm;codecs=h264',
+            videoBitsPerSecond: 2500000
+        };
+
+        try {
+            mediaRecorder = new MediaRecorder(stream, options);
+        } catch (e) {
+            mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+        }
+
+        mediaRecorder.ondataavailable = function(event) {
+            if (event.data.size > 0) {
+                recordedChunks.push(event.data);
+            }
+        };
+
+        mediaRecorder.start();
+        document.getElementById('recordingStatus').textContent = "Recording...";
+
+        currentInstruction = 0;
+        showInstruction();
+        instructionInterval = setInterval(showNextInstruction, 3000);
+    }
+
+    function showInstruction() {
+        document.getElementById('currentInstruction').textContent = instructions[currentInstruction];
+    }
+
+    function showNextInstruction() {
+        currentInstruction++;
+        if (currentInstruction >= instructions.length) {
+            clearInterval(instructionInterval);
+            completeRecording();
+            return;
+        }
+        showInstruction();
+    }
+
+    function completeRecording() {
+        isRecording = false;
+        recordingComplete = true;
+        mediaRecorder.stop();
+
+        const button = document.getElementById('actionButton');
+        button.textContent = 'Kirim';
+        button.style.display = 'block';
+        button.className = 'stop';
+
+        document.getElementById('recordingStatus').textContent = "Verifikasi Selesai";
+        document.getElementById('currentInstruction').textContent = "Silakan klik tombol Kirim";
+    }
+
+    async function saveRecording() {
+        const button = document.getElementById('actionButton');
+        const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
+        const progressBar = document.querySelector('.progress-bar');
+
+        try {
+            button.disabled = true;
+            loadingModal.show();
+
+            const blob = new Blob(recordedChunks, { 
+                type: 'video/webm;codecs=h264'
+            });
+
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                progress += 5;
+                if (progress <= 90) {
+                    progressBar.style.width = progress + '%';
+                }
+            }, 200);
+
+            const base64Video = await blobToBase64(blob);
+            const cleanBase64 = base64Video.split(';base64,').pop();
+
+            const response = await fetch("{{ route('video.verify') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    video: cleanBase64
+                })
+            });
+
+            const result = await response.json();
+
+            clearInterval(progressInterval);
+            progressBar.style.width = '100%';
+
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            loadingModal.hide();
+
+            if (result.success) {
+                const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                successModal.show();
+            } else {
+                throw new Error(result.message || 'Gagal mengirim video verifikasi');
+            }
+
+        } catch (error) {
+            console.error('Error:', error);
+            loadingModal.hide();
+            alert('Gagal mengirim video verifikasi: ' + error.message);
+        } finally {
+            button.disabled = false;
+            button.textContent = 'Kirim';
+        }
+    }
+
+    function blobToBase64(blob) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+    }
+</script>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>

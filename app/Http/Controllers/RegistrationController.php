@@ -24,36 +24,37 @@ class RegistrationController extends Controller
 
     public function store(Request $request)
     {
-        // Validasi input
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'email' => 'required|email|max:255',
-            'password' => 'required|string|min:8',
-            'ktp' => 'required|string|size:16',
-            'ktpPhoto' => 'required|image|max:2048',
-            'npwp' => 'required|string|max:20',
-            'npwpPhoto' => 'required|image|max:2048',
-            'selfPhoto' => 'required|image|max:2048',
-            'address' => 'required|string',
-            'city' => 'required|string',
-            'province' => 'required|string',
-            'gender' => 'required|in:M,F',
-            'placeOfBirth' => 'required|string',
-            'dateOfBirth' => 'required|date',
-            'orgUnit' => 'nullable|string',
-            'workUnit' => 'nullable|string',
-            'position' => 'nullable|string',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()
-                ->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-
         try {
+            // Validasi input
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'phone' => 'required|string|max:20',
+                'email' => 'required|email|max:255',
+                'password' => 'required|string|min:8',
+                'ktp' => 'required|string|size:16',
+                'ktpPhoto' => 'required|image|max:2048',
+                'npwp' => 'required|string|max:20',
+                'npwpPhoto' => 'required|image|max:2048',
+                'selfPhoto' => 'required|image|max:2048',
+                'address' => 'required|string',
+                'city' => 'required|string',
+                'province' => 'required|string',
+                'gender' => 'required|in:M,F',
+                'placeOfBirth' => 'required|string',
+                'dateOfBirth' => 'required|date',
+                'orgUnit' => 'nullable|string',
+                'workUnit' => 'nullable|string',
+                'position' => 'nullable|string',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validasi gagal',
+                    'errors' => $validator->errors()
+                ], 422);
+            }
+
             // Convert images to base64
             $ktpPhotoBase64 = base64_encode(file_get_contents($request->file('ktpPhoto')));
             $npwpPhotoBase64 = base64_encode(file_get_contents($request->file('npwpPhoto')));
@@ -81,21 +82,7 @@ class RegistrationController extends Controller
                 'position' => $request->position,
             ]);
 
-            if ($response['success']) {
-                session(['registration_email' => $request->email]);
-                
-                return redirect()->route('registration.index')
-                                ->with('success', 'Registrasi berhasil!');
-            }
-
-            Log::error('Registration API Error', [
-                'response' => $response
-            ]);
-
-            return redirect()
-                ->route('registration.index')
-                ->withInput()
-                ->with('error', $response['message'] ?? 'Unknown error');
+            return response()->json($response);
 
         } catch (\Exception $e) {
             Log::error('Registration Error', [
@@ -103,9 +90,10 @@ class RegistrationController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
 
-            return redirect()->back()
-                            ->with('error', 'Terjadi kesalahan: ' . $e->getMessage())
-                            ->withInput();
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
         }
     }
 }
