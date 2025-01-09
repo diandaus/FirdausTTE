@@ -35,7 +35,7 @@
     opacity: 1;
 }
 
-/* Modal Body & Footer Styles */
+/* Modal Body Styles */
 .modal-body {
     padding: 2rem;
     max-height: 70vh;
@@ -187,15 +187,139 @@
     }
 }
 
-/* Touch Device Optimizations */
+/* Touch Device Optimization */
 @media (hover: none) and (pointer: coarse) {
     .modal-body {
         -webkit-overflow-scrolling: touch;
     }
-    
-    .modal-footer .btn {
-        padding: 0.75rem 1.5rem;
-        font-size: 16px;
-        min-height: 44px;
-    }
+}
+
+/* Form Validation Styles */
+.is-invalid {
+    border-color: #dc3545;
+}
+
+.alert-validation {
+    margin-bottom: 1rem;
+}
+
+/* Custom List Styles */
+.custom-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.list-marker {
+    margin-right: 0.5rem;
+    font-weight: 500;
+}
+
+.list-content {
+    display: inline-block;
+}
+
+.term {
+    font-weight: 600;
+}
+
+/* Section Styles */
+.section {
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    display: flex;
+    align-items: start;
+    margin-bottom: 1rem;
+}
+
+.section-number {
+    margin-right: 0.5rem;
+}
+
+.section-heading {
+    font-weight: 600;
+}
+
+/* Contact Table Styles */
+.contact-table {
+    width: 100%;
+}
+
+.contact-table td {
+    padding: 0.25rem 0;
+    vertical-align: top;
+}
+
+/* Text Colors */
+.text-blue {
+    color: #0d6efd;
+}
+
+/* Helper Classes */
+.helper-text {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+/* Preview Image Styles */
+.preview-wrapper {
+    max-width: 100%;
+    margin-top: 1rem;
+}
+
+.preview-image {
+    max-width: 200px;
+    height: auto;
+}
+
+.img-preview {
+    max-width: 200px;
+    height: auto;
+}
+
+/* Divider Styles */
+.divider {
+    height: 40px;
+    width: 1px;
+    background-color: #dee2e6;
+    margin: 0 1rem;
+}
+
+/* Logo Styles */
+.navbar-logo {
+    height: 45px;
+}
+
+.navbar-logo-small {
+    height: 35px;
+    margin-top: -10px;
+}
+
+/* Form Check Styles */
+.form-check {
+    margin-bottom: 1rem;
+}
+
+.form-check-input:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+/* Modal Body Text Styles */
+.modal-body[style*="text-align: justify"] {
+    line-height: 1.6;
+}
+
+.modal-body ul {
+    padding-left: 1.5rem;
+}
+
+.modal-body ol {
+    padding-left: 1.5rem;
+}
+
+.modal-body li {
+    margin-bottom: 0.5rem;
 } 
