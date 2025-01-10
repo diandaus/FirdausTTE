@@ -125,8 +125,8 @@
 }
 
 .section-title {
-    font-weight: 700;
-    font-size: 1.1rem;
+    font-weight: 500;
+    font-size: 0.8rem;
     margin-bottom: 0.5rem;
     color: #333;
     display: flex;
@@ -370,3 +370,4 @@ form {
     background-color: #0d6efd;
     border-color: #0d6efd;
 } 
+

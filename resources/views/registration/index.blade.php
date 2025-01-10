@@ -541,7 +541,8 @@
                 </ul>
 
                 <div class="section">
-                    <h6 class="section-title"><strong>12. Bahasa</strong></h6>
+                    <h6 class="section-title"><span class="section-number">12.</span>
+                    <span class="section-heading">Bahasa</span></h6>
                         <div class="section-content">
                             <p class="section-intro">Kebijakan Privasi ini dibuat dalam 2 (dua) bahasa, yaitu Bahasa Indonesia dan Bahasa Inggris. Dalam hal terdapat ketidaksesuaian antara satu bahasa dengan bahasa yang lain, maka teks Bahasa Indonesia yang akan berlaku.</p>
         
@@ -549,7 +550,8 @@
                 </div>
 
                 <div class="section">
-                    <h6 class="section-title"><strong>13. Perubahan pada Kebijakan Privasi</strong></h6>
+                    <h6 class="section-title"><span class="section-number">13.</span>
+                    <span class="section-heading">Perubahan pada Kebijakan Privasi</span></h6>
                         <div class="section-content">
                             <p class="section-intro">Jika Peruri CA membuat perubahan materipada Kebijakan Privasi ini,Peruri CA akan memberi tahu Anda dengan mengunggah versi terbaru ke situs. Dokumen Kebijakan Privasidan setiap perubahan yang dilakukan dapat diakses secara publik dalam waktu selambat-lambatnya 7 (tujuh) hari kalender setelah disetujui. Setiap perubahan efektif berlaku 30 (tiga puluh) hari kalender setelah dipublikasikan.</p>
         
@@ -557,7 +559,8 @@
                 </div>
                 
                 <div class="section">
-                <h6 class="section-title"><strong>14. Hubungi kami</strong></h6>
+                <h6 class="section-title"><span class="section-number">14.</span>
+                <span class="section-heading">Hubungi kami</span></h6>
                     <div class="section-content">
                         <p class="section-intro">Jika Anda memiliki pertanyaan tentang Kebijakan Privasi ini, silakan hubungi Peruri CA melalui:</p>
                         <div class="contact-info">
@@ -613,33 +616,243 @@
             <div class="modal-body" style="text-align: justify;">
                 <p>Harap baca perjanjian ini dengan saksama sebelum melanjutkan. Tujuan Sertifikat Elektronik adalah untuk mengikat identitas Anda dengan pasangan Kunci Privat dan Kunci Publik. Dengan memperoleh atau menggunakan Sertifikat Elektronik yang diberikan oleh Peruri CA, Anda setuju untuk:</p>
 
-                <ol>
-                    <li>Memberikan informasi yang benar, akurat, dan lengkap tentang diri Anda;</li>
-                    <li>Menjaga kerahasiaan dan keamanan Kunci Privat Anda;</li>
-                    <li>Menggunakan Sertifikat Elektronik hanya untuk tujuan yang sah dan sesuai dengan hukum yang berlaku;</li>
-                    <li>Segera memberitahu Peruri CA jika terjadi atau diduga terjadi kebocoran Kunci Privat;</li>
-                    <li>Menghentikan penggunaan Sertifikat Elektronik jika informasi dalam sertifikat tidak lagi akurat;</li>
-                    <li>Menggunakan Sertifikat Elektronik hanya pada server yang dapat diakses pada domain yang tercantum dalam Sertifikat Elektronik (untuk SSL/TLS Server Certificate);</li>
-                    <li>Bertanggung jawab atas segala kerugian yang timbul akibat kegagalan dalam menjaga kerahasiaan Kunci Privat;</li>
-                    <li>Mematuhi semua persyaratan dan ketentuan yang ditetapkan dalam CPS Peruri CA;</li>
-                    <li>Membayar biaya yang dikenakan oleh Peruri CA untuk layanan yang diberikan;</li>
-                    <li>Menyetujui bahwa Peruri CA berhak mencabut Sertifikat Elektronik jika:
-                        <ul>
-                            <li>Informasi dalam Sertifikat Elektronik tidak benar atau telah berubah</li>
-                            <li>Kunci Privat telah diketahui oleh pihak lain</li>
-                            <li>Melanggar ketentuan dalam perjanjian ini</li>
-                            <li>Diperintahkan oleh penegak hukum atau pengadilan</li>
-                            <li>CPS mengharuskan pencabutan</li>
-                        </ul>
-                    </li>
-                </ol>
-
-                <p>Dengan menandatangani atau menyetujui Perjanjian ini, Anda menyatakan bahwa:</p>
                 <ul>
-                    <li>Anda telah membaca, memahami, dan setuju untuk terikat dengan semua ketentuan dalam Perjanjian ini</li>
-                    <li>Anda memiliki kewenangan untuk menerima Perjanjian ini</li>
-                    <li>Perjanjian ini merupakan kewajiban hukum yang sah dan mengikat</li>
+                    <li>meninjau informasi yang terkandung dalam Sertifikat Elektronik (nama, alamat surel, dan afiliasi organisasi);</li>
+                    <li>memberitahu Peruri CA jika informasi Anda tidak benar, tidak sesuai, atau jika Anda merasa Sertifikat Elektronik Anda tidak lagi menjadi indikasi terpercaya bahwa Anda memiliki kontrol atas Kunci Privat Anda; dan</li>
+                    <li>mengikuti syarat dan ketentuan yang berlaku.</li>
+                   
                 </ul>
+
+                <p>Dengan memperoleh atau menggunakanSertifikat Elektronik yang diterbitkan oleh Peruri CA, Anda baik atas nama pribadi ataupun entitas hukum yang anda wakili, menyepakati ketentuan yang tertera dalam Perjanjian ini.Jika anda tidak menerima Perjanjian ini, jangan lanjutkan.Jika anda memiliki pertanyaan tentang Perjanjian ini, silakan mengirimkan surel ke Peruri CA melalui info.digital@peruri.co.id.</p>
+                <p>Perjanjian ini dapat berubah atau diperbaharui sewaktu-waktu. Dokumen Perjanjian dan setiap perubahan yang dilakukan dapat diakses secara publik disitu srepositori dalam waktu selambat-lambatnya 7 (tujuh) hari kalender setelah disetujui. Setiap perubahan efektif berlaku
+                30 (tiga puluh) hari kalender setelah dipublikasikan.</p>
+                <p>Perjanjian Pemilik ("Perjanjian") ini merupakan perjanjian antara Peruri CA dengan Anda.
+                Anda dan Peruri setuju dengan:</p>
+                
+                <!-- Daftar Istilah -->
+                <div class="section">
+    <h6 class="section-title"><span class="section-number">1.</span><span class="section-heading">Daftar Istilah</span></h6>
+    <div class="section-content">
+        <ol>
+            <li>
+                <strong class="term">Anda</strong> adalah orang, badan usaha, atau badan hukum yang mengajukan untuk mendapatkan Sertifikat Elektronik kepada Peruri CA.
+            </li>
+            <li>
+                <strong class="term">Peruri CA</strong> adalah unit bisnis Peruri yang memberikan layanan Tanda Tangan Elektronik, Sertifikat Elektronik, dan Segel Elektronik.
+            </li>
+            <li>
+                <strong class="term">Sertifikat Elektronik</strong> adalah sertifikat yang bersifat elektronik yang memuat tanda tangan elektronik dan identitas yang menunjukkan status subjek hukum para pihak dalam transaksi elektronik yang dikeluarkan oleh Peruri CA sebagai Penyelenggara Sertifikasi Elektronik (PSrE).
+            </li>
+            <li>
+                <strong class="term">Certification Practice Statement (CPS)</strong> adalah dokumen Peruri CA yang berisi kebijakan dan prosedur yang digunakan untuk mengoperasikan infrastruktur dari proses bisnis Peruri CA. Dokumen CPS Peruri CA tersedia di <a href="https://ca.peruri.co.id/ca/legal">https://ca.peruri.co.id/ca/legal</a>.
+            </li>
+            <li>
+                <strong class="term">Tanda Tangan Elektronik</strong> adalah tanda tangan yang terdiri atas informasi elektronik yang dilekatkan, terasosiasi, atau terkait dengan informasi elektronik lainnya yang digunakan sebagai alat verifikasi dan autentikasi.
+            </li>
+            <li>
+                <strong class="term">Pasangan Kunci</strong> adalah kunci yang dirahasiakan oleh Peruri CA yang digunakan untuk membuat Tanda Tangan Elektronik dan/atau mendekripsi catatan atau file elektronik yang dienkripsi dengan Kunci Publik yang sesuai.
+            </li>
+            <li>
+                <strong class="term">Kunci Privat</strong> adalah kunci yang dirahasiakan oleh Peruri CA yang digunakan untuk membuat Tanda Tangan Elektronik dan/atau mendekripsi catatan atau file elektronik yang dienkripsi dengan Kunci Publik yang sesuai.
+            </li>
+            <li>
+                <strong class="term">Kunci Publik</strong> adalah kunci terbuka Anda yang terkandung dalam Sertifikat Elektronik Anda dan sesuai dengan Kunci Privat rahasia yang Anda gunakan. Kunci Publik digunakan untuk mengandalkan pihak untuk memverifikasi Tanda Tangan Elektronik yang dibuat oleh Kunci Privat dan/atau untuk mengenkripsi pesan sehingga hanya dapat didekripsi oleh Peruri CA menggunakan Kunci Privat yang sesuai.
+            </li>
+        </ol>
+    </div>
+</div>
+
+
+<!--  KEWAJIBAN ANDA -->
+<div class="section">
+    <h6 class="section-title"><span class="section-number">2.</span><span class="section-heading">KEWAJIBAN ANDA</span></h6>
+    <div class="section-content">       
+        <div class="item">2.1 Informasi</div>
+            <p>Anda harus selalu memberikan informasi yang akurat, lengkap, dan benar kepada Peruri CA.Jika informasi yang diberikan kepada Peruri CA ada yang berubah, keliru, atau tidak akurat, maka Anda harus segera memperbarui informasi tersebut.Jika ada informasi yang termasuk dalam Sertifikat Elektronik yang dikeluarkan menjadi tidak akurat atau menyesatkan, Anda harus segera berhenti menggunakannya dan meminta	pencabutan	Sertifikat Elektronik. Anda tidak boleh memasang atau menggunakan Sertifikat Elektronik sampai setelah Anda meninjau dan memverifikasi keakuratan data yang ada dalam Sertifikat Elektronik.</p>
+        <div class="item">2.2 Penggunaan</div>
+            <p>Anda bertanggung jawab atas penggunaan Sertifikat Elektronik dan semua peralatan serta perangkat lunak yangdiperlukanuntuk menggunakan Sertifikat Elektronik. Anda harus menggunakan Sertifikat Elektronik sesuai dengan hukum dan kebijakan yang berlaku (termasuk CPS yang berlaku).Anda harus segera memberi tahu Peruri CA jika Anda mengetahui adanya pelanggaran terhadap Perjanjian ini.Anda bertanggung jawab penuh untuk mendapatkan dan mempertahankan otorisasi atau lisensi tambahan apa pun yang diperlukan untuk menggunakan Sertifikat Elektronik untuk tujuan spesifik atau tertentu.</p>
+        <div class="item">2.3 Keamanan Akun</div>
+            <p>Anda bertanggung jawab untuk melindungi Kunci Privat Anda dengan cara:</p>
+            <ol type="i">
+                <li>Bila Kunci Privat dititipkan kepada Peruri CA, Anda melindungi dengan menjaga kerahasiaan dan tidak membagikan password, OTP (yang dikirimkan melalui SMS, email, dan/atau Whatsapp), dan token yang dihasilkan oleh aplikasi Keyla. Peruri CA tidak bertanggung jawab atas segala kerugian yang timbul akibat kebocoran password, OTP, dan/atau token yang dihasilkan oleh aplikasi Keyla untuk akun Anda.</li>
+                <li>bila Kunci Privat disimpan oleh Anda, modul kriptografi yang digunakan harus memenuhi standar minimum yang ditetapkan di dalam CPS. Anda bertanggung jawab secara penuh atas segala bentuk kerugian yang timbul akibat tidak terpenuhinya persyaratan ini.</li>
+            </ol>
+        <div class="item">2.4 Batasan</div>
+            <p>Anda tidak boleh menggunakan Sertifikat Elektronik Anda untuk:</p>
+            <ol type="i">
+                <li>mengoperasikan fasilitas tenaga nuklir, sistem kontrol lalu lintas udara, sistem navigasi pesawat, sistem kontrol senjata, atau sistem lain yang membutuhkanfailsafeoperation,yang kegagalannya dapat menyebabkan cedera, kematian, atau kerusakan lingkungan;</li>
+                <li>mengirim,	mengunggah, mendistribusikan, atau mengirimkan korespondensi massal yang tidak diminta, kode berbahaya, kode yang diunduh tanpa persetujuan pengguna, atau dokumen atau perangkat lunakapa pun yang dapat merusak pengoperasian komputer orang lain;</li>
+                <li>membuat pernyataan yang salah tentang Sertifikat Elektronik Anda, diri Anda sendiri, atau afiliasi Anda dengan entitas apa pun, atau melanggar kepercayaan pihak ketiga;</li>
+                <li>memodifikasi,	mensublisensikan, merekayasa balik, atau membuat karya turunan dari Sertifikat Elektronik apa pun atau mengambil tindakan apa pun untuk menyerang atau berupaya mengganggu operasi yang dapat dipercaya dariInfrastrukturKunciPublik di mana melibatkan Pasangan Kunci atau Sertifikat Elektronik Anda; atau</li>
+                <li>bertindak dengan cara yang tidakwajar yangdapat mengakibatkanpelanggaran hukum.</li>
+            </ol>
+    </div>
+</div>
+
+
+<div class="section">
+    <h6 class="section-title">
+        <span class="section-number">3.</span>
+        <span class="section-heading">PENERBITAN DAN PENGGUNAAN SERTIFIKAT ELEKTRONIK</span>
+    </h6>
+    <div class="section-content">
+        <div class="item">3.1. Verifikasi</div>
+        <p>Peruri CA memverifikasi informasi Sertifikat Elektronik sesuai dengan CPS dan prosedur yang berlaku. Verifikasi tunduk pada keputusan tunggal Peruri CA, dan Peruri CA dapat menolak untuk mengeluarkan Sertifikat Elektronik karena alasan apa pun. Peruri CA tidak diharuskan untuk memberikan alasan penolakan.</p>        
+        <div class="item">3.2. Pemberlakuan Sertifikat Elektronik</div>     
+        <p>Sertifikat Elektronik berlaku segera setelah penerbitan sampai Sertifikat berakhir atau dicabut. Peruri CA memberi Anda Sertifikat Elektronik yang dapat ditarik kembali, tidak eksklusif, tidak dapat dipindah tangankan, untuk kepentingan subjek yang diidentifikasi di dalamnya, berhubungan dengan Sertifikat Elektronik yang sesuai dan mengoperasikan perangkat lunak kriptografi, untuk:</p>
+        <ol type="i">
+            <li>membuat Tanda Tangan Elektronik;</li>
+            <li>mengenkripsi dan mendekripsi komunikasi; dan</li>
+            <li>melakukan operasi Kunci Publik atau Kunci Privat lainnya.</li>
+        </ol>
+        <div class="item">3.3. Pencabutan dan Ketidakberlakuan Sertifikat  Elektronik</div>
+        <p>Peruri CA dapat mencabut Sertifikat Elektronik Anda karena alasan yang disebutkan dalam CPS, antara lain:</p>
+        <ol type="i">
+            <li>bila Kunci Privat Peruri CA hilang, terjadi kebocoran/kompromi, atau terindikasi terjadi kebocoran/kompromi; dan</li>
+            <li>ketika Peruri CA mengetahui bahwa Kunci Privat Pemilik telah mengalami kebocoran, maka Peruri CA akan mencabut semua Sertifikat Elektronik yang memuat Kunci Publik yang berasosiasi dengan Kunci Privat yang telah terkompromi tersebut.</li>
+        </ol>
+        <p>Peruri CA juga dapat mencabut Sertifikat Elektronik Anda jika Peruri CA percaya pencabutan diperlukan untuk melindungi reputasi atau bisnisnya. Anda harus segera berhenti menggunakan Sertifikat Elektronik dan Kunci Privat yang sesuai (kecuali untuk mendekripsi komunikasi yang dienkripsi sebelumnya) setelah:</p>
+        <ol type="i">
+            <li>pencabutan Sertifikat Elektronik;</li>
+            <li>pengakhiran Perjanjian ini; atau</li>
+            <li>tanggal ketika periode penggunaan yang diizinkan untuk Kunci Privat telah kedaluwarsa.</li>
+        </ol>
+        <div class="item">3.4. Penghancuran Kunci Privat</div>
+        <ol type="i">
+            <li>Saat Kunci Privat Anda yang dititipkan kepada Peruri CA sudah tidak diperlukan lagi, sudah melebihi batas masa pakai, atau Sertifikat Elektronik dicabut, Peruri CA dapat melakukan penghancuran Kunci Privat Anda dengan menimpa lalu menghapusnya dari media penyimpanan.</li>
+            <li>Anda harus menghancurkan Kunci Privat Anda yang disimpan oleh Anda sendiri, saat Kunci Privat sudah tidak diperlukan lagi, sudah melebihi batas masa pakai, atau Sertifikat Elektronik dicabut.</li>
+        </ol>
+    </div>
+</div>
+
+<div class="section">
+    <h6 class="section-title">
+        <span class="section-number">4.</span>
+        <span class="section-heading">PKELAYAKAN INTELEKTUAL DAN  INFORMASI</span>
+    </h6>
+    <div class="section-content">
+        <div class="item">4.1. Kepemilikan</div>
+        <p>Peruri CA memiliki kepemilikan tunggal dalam:</p>
+        <ol type="i">
+            <li>Sertifikat Elektronik apapun yang dikeluarkannya;</li>
+            <li>semua merek dagang, hak cipta,danhak kekayaan intelektual lainnya;</li>
+            <li>informasi apapun yang dikumpulkan oleh Peruri CA; dan</li>
+            <li>Infrastruktur Kunci Publik;</li>
+            <li>karya turunan dari Sertifikat Elektronik, terlepas dari siapa yang menyarankan atau meminta karya turunan.</li>
+        </ol>
+        <div class="item">4.2. Publikasi Sertifikat Elektronik Anda menyetujui bahwa:</div>
+        <ol type="i">
+            <li>segala informasi tentang Anda yang terdapat pada Sertifikat Elektronik Anda dapat dipublikasikan ke umum; dan</li>
+            <li>Peruri CA mentransfer informasi pribadi Anda ke server Peruri CA, yang berlokasi di Indonesia.</li>
+        </ol>
+        <div class="item">4.3. Penyimpanan dan Penggunaan Informasi Peruri CA akan mengikuti Kebijakan Privasi yang diumumkan melalui situs webnya ketika menerima dan menggunakan informasi dari Anda. Peruri CA dapat mengubah Kebijakan Privasi atas kebijakannya sendiri.</div>
+        
+    </div>
+</div>
+
+<div class="section">
+    <h6 class="section-title">
+        <span class="section-number">5.</span>
+        <span class="section-heading">JANGKA WAKTU DAN PENGHENTIAN</span>
+    </h6>
+    <div class="section-content">
+        <div class="item">5.1. Jangka Waktu</div>
+        <p>Perjanjian ini berlaku setelah Anda menerima Sertifikat Elektronik hingga Sertifikat Anda berakhir sebelum:</p>
+        <ol type="i">
+            <li>tanggal kedaluwarsa Sertifikat Elektronik yang bersangkutan; atau</li>
+            <li>pengakhiran Perjanjian ini oleh pihak sebagaimana diizinkan di sini.</li>
+        </ol>
+        <div class="item">5.2. Pengakhiran</strong></div>
+        <p>Anda dapat mengakhiri Perjanjian ini dengan memberikan pemberitahuan 30 (tiga puluh) harikalendersebelumnyakepadaPeruri CA.Peruri CA dapat segera mengakhiri Perjanjian ini jika:</p>
+        <ol type="i">
+            <li>Anda secara material melanggarPerjanjian ini;</li>
+            <li>Peruri CA tidak dapat memverifikasi informasi Anda; atau</li>
+            <li>jika standar atau peraturan industri berubah dengan cara yang memengaruhi validitas Sertifikat Elektronik yang dikeluarkan.</li>
+        </ol>
+        <p>Setelah penghentian, Peruri CA dapat mencabut Sertifikat Elektronik apa pun yang dikeluarkan berdasarkan Perjanjian ini.</p>
+        <div class="item">5.3. Penghapusan</div>
+        <p>Setelah penghentian, Peruri CA dapat mencabut Sertifikat Elektronik apa pun yang dikeluarkan berdasarkan Perjanjian ini.</p>    
+    </div>
+</div>
+
+<div class="section">
+    <h6 class="section-title">
+        <span class="section-number">6.</span>
+        <span class="section-heading">PERNYATAAN DAN PEMBATASAN TANGGUNG JAWAB</span>
+    </h6>
+    <div class="section-content">
+        <div class="item">6.1. Perbaikan</div>
+        <p>Peruri CA tidak berkewajiban untuk memperbaiki kerusakan jika:</p>
+        <ol type="i">
+            <li>Sertifikat	Elektronik	disalahgunakan, rusak, atau dimodifikasi;</li>
+            <li>Anda tidak segera melaporkan kerusakan ke Peruri; atau</li>
+            <li>Anda melanggar	ketentuan	dalam Perjanjian ini.</li>
+        </ol>
+        <div class="item">6.2. Sangkalan Jaminan</div>
+        <p>Semua produk dan layanan Peruri CA, termasuk Sertifikat Elektronik, disediakan "sebagaimana adanya" dan "sebagaimana tersedia". Peruri CA menyangkal semua jaminan tersurat dan tersirat, termasuk semua jaminan dagang dan kesesuaian untuk tujuan tertentu.Peruri CA tidak menjamin bahwa produk atau layanan apapun akan memenuhi harapan Anda atau akses ke produk atau layanan akan tepat waktu atau bebas dari kesalahan. Peruri CA tidak menjamin ketersediaan produk atau layanan apa pundan dapat memodifikasi atau menghentikan penawaran terkait Sertifikat Elektronik kapan saja.</p>
+        <div class="item">6.3. BatasanTanggung Jawab</div>
+        <p>Kecuali sebagaimana dijelaskan dalam bagian 6.5, Anda membebaskan atau menghapus semua tanggung jawab dari Peruri CA dan setiap officer, direktur, mitra, karyawan, kontraktor, dan agen, hasil dari atau terkait dengan Perjanjian ini. Anda juga membebaskan atau menghapus semua tanggung jawab atas kerusakan langsung, tidak langsung, khusus, insidental, atau konsekuensial yang berkaitan dengan Perjanjian ini atau Sertifikat Elektronik, termasuk semua kerusakan yang menyebabkan kehilangan keuntungan, penggunaan, atau data. Pengecualian ini berlaku bahkan jika Peruri CA mengetahui kemungkinan kerusakan tersebut.</p>
+        <div class="item">6.4. Keadaan Kahar dan Kelemahan Koneksi</div>
+        <p>Tidak ada pihak yang bertanggung jawab atas kegagalan atau keterlambatan dalam melaksanakan kewajibannya berdasarkan Perjanjian ini sejauh keadaan 	yang menyebabkan kegagalan atau keterlambatan
+        tersebut berada di luar kendali pihak terlibat tersebut. Sertifikat Elektronik tunduk pada operasi dan infrastruktur telekomunikasi internet dan pengoperasian layanan koneksi internet Anda, yang semuanya berada di luar kendali Peruri.</p>
+    <div class="item">6.5. Penerapan</div>
+    <p>Batasan dan pengecualian dalam bagian 6 ini hanya berlaku sejauh diizinkan oleh hukum dan berlaku terlepas dari:</p>
+    <ol type="i">
+        <li>alasan atau sifat tanggung jawab, termasuk klaim gugatan;</li>
+        <li>jumlah klaim apapun;</li>
+        <li>jumlah atau sifat kerusakan;atau</li>
+        <li>apakah ada ketentuan lain dari Perjanjian ini yangtelahdilanggaratauterbuktitidak efektif.</li>
+    </ol>
+    <div class="item">6.6. Batasan pada Gugatan</div>
+    <p>Setiap pihak harus memulai segala klaim dan gugatan yang timbul dari Perjanjian ini dalam waktu satu tahun sejak terjadinya peristiwa yang menimbulkan penyebab Gugatan. Setiap pihak melepaskan haknya atas klaim apa pun yang dimulai lebih dari satu tahun sejak tanggal pertama penyebab timbulnya Gugatan.</p>
+    </div>
+</div>
+
+<div class="section">
+    <h6 class="section-title">
+        <span class="section-number">7.</span>
+        <span class="section-heading">LAIN-LAIN</span>
+    </h6>
+    <div class="section-content">
+        <div class="item">7.1. Tanggung jawab atas Pelanggaran</div>
+        <p>Anda bertanggung jawab atas segala klaim (termasuk kerusakan dan biaya yang muncul) yang diajukan oleh pihak ketiga terhadap Peruri, yang disebabkan oleh pelanggaran Anda yang disengaja atau kelalaian atas Perjanjian ini, termasuk klaim yang terkait dengan penggunaan Kunci Privat Anda secara tidak sah, kecuali sebelum penggunaan yang tidak sah tersebut, Anda telah memberi tahu Peruri dengan tepat dan meminta pencabutan Sertifikat Elektronik.</p>
+        <div class="item">7.2. ResolusiKonflik</div>
+        <p>Sengketa yang terjadi antara Anda dengan Peruri CA sehubugan dengan ketentuan Perjanjian ini, akan diselesaikan dengan cara:</p>
+        <ol type="i">
+            <li>Salah satu pihak menyampaikan pemberitahuan secara tertulis kepada pihak lainnya. Penyelesaian sengketa wajib dilakukan dengan cara musyawarah dalam jangka waktu 30 (tiga puluh) hari kalender sejak pemberitahuan tertulis disampaikan.</li>
+            <li>Apabila sengketa tidak dapat diselesaikan dengan cara musyawarah, maka para pihak sepakat bahwa penyelesaian sengketa dilakukan oleh Badan Arbitrase Nasional Indonesia (BANI).</li>
+            </ol>
+            <div class="item">7.3. Amendemen</div>
+            <p>Peruri akan mengubah situs webnya dan dokumen apa pun yang tercantum di dalamnya, termasuk CPS, dengan ketentuan bahwa amendemen tersebut diadopsi dan diterapkan sesuai dengan praktik industri yang sudah terstandardisasi. Penggunaan Anda terhadap Sertifikat Elektronik setelah tanggal dilakukannya perubahan pada situs web merupakan penerimaan Anda terhadap segala perubahan yang terjadi.</p>
+        <div class="item">7.4. Pengesampingan</div>
+        <p>Kegagalan salah satu pihak untuk menegakkan atau menunda pelaksanaan ketentuan dalam Perjanjian ini, tidak mengesampingkan:</p>
+        <ol type="i">
+            <li>hak pihak tersebut untuk menegakkan ketentuan yang sama di kemudian hari; atau</li>
+            <li>hak pihak tersebut untuk menegakkan ketentuan lain dari Perjanjian.</li>
+        </ol>
+        <p>Pengesampingan hanya efektif jika dibuat secara tertulis atau digital, dan disetujui oleh Peruri CA.</p>
+        
+        <div class="item">7.5. Pemberitahuan</div>
+        <p>Kecuali dinyatakan lain dalam Perjanjian ini, Anda harus mengirim semua pemberitahuan dalam Bahasa Indonesia baik secara tertulis atau digital dengan permintaan tanda terima kembali ke Peruri CA. Peruri CA akan mengirimkan pemberitahuan kepada Anda menggunakan alamat surel yang diberikan selama proses aplikasi Sertifikat Elektronik. Pemberitahuan untuk Peruri CA efektif ketika pemberitahuan diterima dalam kurun waktu 7x24 jam.Pemberitahuan kepada Anda efektif saat pemberitahuan dikirim.</p>
+        <div class="item">7.6. Tugas</div>
+        <p>Anda tidak boleh mengabaikan hak atau kewajiban Anda berdasarkan Perjanjian ini tanpa persetujuan tertulis sebelumnya dari Peruri CA.Setiap transfer tanpa persetujuan tidak berlaku dan merupakan pelanggaran materi dari Perjanjian ini.Peruri CA dapat mengalihkan hak dan kewajibannya tanpa persetujuan Anda.</p>
+        <div class="item">7.7. Keterpisahan</div>
+        <p>Ketidakabsahan atau ketidakberlakuan suatu ketentuan berdasarkan Perjanjian ini, sebagaimana ditentukan oleh arbiter, pengadilan, atau badan administratif dari yurisdiksi yang kompeten, tidak memengaruhi validitas atau keberlakuan dari sisa Perjanjian ini. Peruri CA akan menggantiketentuanyang tidak sah atau tidak dapat dilaksanakan dengan ketentuan yang sah atau dapat dilaksanakan untuk mencapai tujuan ekonomi, hukum, dan komersial yang sama dengan ketentuan yang tidak sah atau tidak dapat dilaksanakan.</p>
+        <div class="item">7.8. Interpretasi</div>
+        <p>Versi definitif dari Perjanjian ini ditulis dalam Bahasa	Indonesia. Jika	Terdapat ketidaksesuaian antara bahasa Indonesia dengan bahasa Inggris, maka yang digunakan adalah klausul bahasa Indonesia.</p>
+    </div>
+</div>
+
+
+<div class="section">
+    <h6 class="section-title">
+        <span class="section-heading">8. PENERIMAAN</span>
+    </h6>
+    <div class="section-content">
+        <p>Dengan mengisi "SAYA SETUJU", Anda mengakui bahwa Anda telah membaca, memahami, dan menyetujui Perjanjian ini. Jangan diproses lanjut jika Anda tidak menyetujui Perjanjian ini.</p>
+    </div>
+</div>
+ 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
