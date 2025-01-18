@@ -7,6 +7,7 @@ use App\Http\Controllers\AkunPeruriController;
 use App\Http\Controllers\SpecimenController;
 use App\Http\Controllers\PhoneNumberController;
 use App\Http\Controllers\PhoneVerificationController;
+use App\Http\Controllers\IdentityVerificationController;
 use Illuminate\Support\Facades\Route;
 
 // Registration Routes
@@ -30,7 +31,9 @@ Route::post('/specimen/send', [SpecimenController::class, 'send'])->name('specim
 // No Telepon 
 Route::get('/phone', [PhoneNumberController::class, 'index'])->name('phone.index');
 Route::post('/phone/fetch', [PhoneNumberController::class, 'fetchData'])->name('phone.fetch');
-Route::post('/phone/submit', [PhoneNumberController::class, 'submit'])->name('phone.submit');
+Route::post('/phone/submit', [PhoneNumberController::class, 'submit'])
+    ->name('phone.submit')
+    ->middleware(['web']);
 
 // Akun Peruri Routes - menggunakan resource
 Route::resource('akun-peruri', AkunPeruriController::class)->only([
@@ -40,6 +43,21 @@ Route::resource('akun-peruri', AkunPeruriController::class)->only([
 // Phone Verification Routes
 Route::post('/verify/send-otp', [PhoneVerificationController::class, 'sendOTP'])->name('verify.send-otp');
 Route::post('/verify/verify-otp', [PhoneVerificationController::class, 'verifyOTP'])->name('verify.verify-otp');
+
+// Identity Verification Routes with throttle middleware
+Route::middleware(['throttle:6,1'])->group(function () {
+    Route::post('/verify-identity/check', [IdentityVerificationController::class, 'verify'])->name('verify.identity.check');
+    Route::post('/verify-identity/resend', [IdentityVerificationController::class, 'resend'])->name('verify.identity.resend');
+    Route::post('/verify-identity/call', [IdentityVerificationController::class, 'requestCall'])->name('verify.identity.call');
+});
+
+// Routes without throttle
+Route::get('/verify-identity', [IdentityVerificationController::class, 'index'])->name('verify.identity');
+Route::post('/verify-identity/reset-mfa', [IdentityVerificationController::class, 'resetMFA'])->name('verify.identity.reset-mfa');
+
+// Tambahkan route untuk pengecekan email
+Route::post('/check-email-status', [VideoVerificationController::class, 'checkEmailStatus'])
+    ->name('check.email.status');
 
 // Debug routes hanya jika dalam mode debug
 if (config('app.debug')) {

@@ -68,6 +68,8 @@
             }
         }
     </style>
+
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body>
 <div class="container py-4">
@@ -207,30 +209,11 @@ $(document).ready(function () {
     // Fungsi untuk membersihkan modal
     function cleanupModals() {
         debugLog('Cleaning up modals');
-        try {
-            // Tutup semua modal Bootstrap yang mungkin masih terbuka
-            $('.modal').modal('hide');
-            
-            // Hapus semua backdrop
-            $('.modal-backdrop').remove();
-            
-            // Reset body
-            $('body')
-                .removeClass('modal-open')
-                .css({
-                    'overflow': '',
-                    'padding-right': ''
-                });
-            
-            // Pastikan instance modal loading tertutup
-            if (bsLoadingModal) {
-                bsLoadingModal.hide();
-            }
-            
-            debugLog('Modal cleanup completed');
-        } catch (error) {
-            console.error('Error during modal cleanup:', error);
-        }
+        $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open').css({
+            'overflow': '',
+            'padding-right': ''
+        });
     }
 
     // Handle form submit
@@ -386,7 +369,6 @@ $(document).ready(function () {
                         <input type="hidden" name="email" value="${user.email || ''}">
                         <input type="hidden" name="name" value="${user.name || ''}">
                         <input type="hidden" name="ktp" value="${user.ktp || ''}">
-                        <input type="hidden" name="npwp" value="${user.npwp || ''}">
                         <input type="hidden" name="city" value="${user.city || ''}">
                         <input type="hidden" name="province" value="${user.province || ''}">
                         <input type="hidden" name="org_unit" value="${user.org_unit || ''}">
@@ -420,7 +402,7 @@ $(document).ready(function () {
                         title: 'Data Tidak Ditemukan',
                         html: `
                             <div class="text-start">
-                                <p class="mb-3">Nomor telepon <strong>${phone}</strong> tidak terdaftar dalam database.</p>
+                                <p class="mb-3">Nomor telepon <strong>${phone}</strong> tidak terdaftar.</p>
                                 <p class="mb-2">Silakan hubungi Manajemen Rumah Sakit untuk konfirmasi data Anda:</p>
                                 <ul class="mt-2 mb-0">
                                     <li>Telepon: (021) XXXXXXXX</li>
@@ -500,6 +482,134 @@ $(document).ready(function () {
     loadingModal.addEventListener('hidden.bs.modal', function () {
         debugLog('Loading modal hidden event triggered');
         cleanupModals();
+    });
+
+    // Handle submit button click
+    $('#btnSubmit').on('click', function(e) {
+        e.preventDefault();
+        debugLog('Submit button clicked');
+        
+        // Show loading modal
+        bsLoadingModal.show();
+        
+        // Get phone number from hidden form
+        const formData = new FormData();
+        formData.append('phone', $('#hiddenForm input[name="phone"]').val());
+        formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
+        
+        // Tambahkan debug untuk melihat data yang dikirim
+        debugLog('Sending data:', {
+            phone: $('#hiddenForm input[name="phone"]').val()
+        });
+        
+        $.ajax({
+            url: "{{ route('phone.submit') }}",
+            method: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                debugLog('Submit success response:', response);
+                
+                // Pastikan modal loading tertutup
+                if (bsLoadingModal) {
+                    bsLoadingModal.hide();
+                }
+                if (bsPhoneModal) {
+                    bsPhoneModal.hide();
+                }
+                
+                // Bersihkan modal sebelum menampilkan SweetAlert
+                cleanupModals();
+                
+                // Store email in localStorage for video verification
+                if (response.data && response.data.email) {
+                    localStorage.setItem('registeredEmail', response.data.email);
+                    debugLog('Email stored in localStorage:', response.data.email);
+                }
+                
+                // Tampilkan SweetAlert setelah semua modal dibersihkan
+                setTimeout(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Data berhasil diregistrasi ke Peruri',
+                        confirmButtonText: 'Lanjutkan ke Verifikasi Wajah',
+                        confirmButtonColor: '#28a745',
+                        allowOutsideClick: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            debugLog('Redirecting to video verification');
+                            window.location.href = "{{ route('video-verification.index') }}";
+                        }
+                    });
+                }, 100);
+            },
+            error: function(xhr, status, error) {
+                debugLog('Submit error:', { xhr, status, error });
+                
+                // Pastikan modal loading tertutup
+                if (bsLoadingModal) {
+                    bsLoadingModal.hide();
+                }
+                if (bsPhoneModal) {
+                    bsPhoneModal.hide();
+                }
+                
+                // Bersihkan modal sebelum menampilkan SweetAlert
+                cleanupModals();
+                
+                let errorMessage = 'Terjadi kesalahan saat registrasi';
+                try {
+                    if (xhr.responseJSON) {
+                        errorMessage = xhr.responseJSON.message || errorMessage;
+                    }
+                } catch (e) {
+                    console.error('Error parsing response:', e);
+                }
+                
+                setTimeout(() => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: errorMessage,
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#dc3545'
+                    });
+                }, 100);
+            },
+            complete: function() {
+                debugLog('Ajax request completed');
+            }
+        });
+    });
+
+    // Tambahkan event listener untuk modal
+    $('#loadingModal').on('shown.bs.modal', function () {
+        debugLog('Loading modal shown');
+    });
+
+    $('#loadingModal').on('hidden.bs.modal', function () {
+        debugLog('Loading modal hidden');
+        cleanupModals();
+    });
+
+    // Set up CSRF token untuk semua request AJAX
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    // Tambahkan debug untuk melihat response
+    $(document).ajaxComplete(function(event, xhr, settings) {
+        if (settings.url === "{{ route('phone.submit') }}") {
+            debugLog('Complete response:', {
+                status: xhr.status,
+                responseText: xhr.responseText,
+                responseJSON: xhr.responseJSON
+            });
+        }
     });
 });
 </script>

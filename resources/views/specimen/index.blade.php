@@ -173,11 +173,13 @@
     }
 </style>
 @endpush
-@endsection
 
 @push('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+$(document).ready(function() {
     const canvas = document.getElementById('signatureCanvas');
     const ctx = canvas.getContext('2d');
     let isDrawing = false;
@@ -246,21 +248,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Save signature
     document.getElementById('saveSignature').addEventListener('click', function() {
-        const signatureData = canvas.toDataURL('image/png');
-        document.getElementById('signatureData').value = signatureData;
+        const canvas = document.getElementById('signatureCanvas');
+        // Get base64 without MIME prefix
+        const base64Data = canvas.toDataURL('image/png').split(',')[1];
+        document.getElementById('signatureData').value = base64Data;
         
         // Show preview
         const preview = document.getElementById('specimenPreview');
-        const previewContainer = document.getElementById('previewContainer');
-        preview.src = signatureData;
-        previewContainer.style.display = 'block';
+        preview.src = 'data:image/png;base64,' + base64Data;
+        document.getElementById('previewContainer').style.display = 'block';
         
-        // Hide file input section
-        const fileInputSection = document.getElementById('fileInputSection');
-        fileInputSection.style.display = 'none';
-        
-        // Clear file input
-        document.getElementById('specimen').value = '';
+        // Hide file input
+        document.getElementById('fileInputSection').style.display = 'none';
     });
 
     // Handle file upload preview
@@ -286,54 +285,51 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Form submission
-    document.getElementById('specimenForm').addEventListener('submit', async function(e) {
+    // Update form submission
+    $('#specimenForm').on('submit', function(e) {
         e.preventDefault();
-        const signatureData = document.getElementById('signatureData').value;
-        const fileInput = document.getElementById('specimen');
         
-        if (!signatureData && !fileInput.files.length) {
-            alert('Silakan buat tanda tangan atau upload specimen');
-            return;
-        }
-
-        try {
-            const formData = new FormData(this);
-            const response = await fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Accept': 'application/json'
+        const formData = new FormData(this);
+        
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                if (response.success) {
+                    Swal.fire({
+                        title: 'Berhasil!',
+                        text: response.message,
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $('#successModal').modal('show');
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Gagal!',
+                        text: response.message,
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
                 }
-            });
-
-            const contentType = response.headers.get('content-type');
-            if (!contentType || !contentType.includes('application/json')) {
-                throw new Error('Server tidak mengembalikan JSON yang valid');
-            }
-
-            const result = await response.json();
-
-            if (result.success) {
-                // Tampilkan modal sukses
-                const successModal = new bootstrap.Modal(document.getElementById('successModal'));
-                successModal.show();
-
-                // Disable form setelah berhasil
-                this.querySelector('button[type="submit"]').disabled = true;
-
-                // Optional: Tambahkan event listener untuk modal hidden
-                document.getElementById('successModal').addEventListener('hidden.bs.modal', function () {
-                    window.location.href = "{{ route('registration.index') }}";
+            },
+            error: function(xhr, status, error) {
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Terjadi kesalahan saat mengirim specimen',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
                 });
-            } else {
-                throw new Error(result.message || 'Gagal mengirim specimen');
             }
-        } catch (error) {
-            console.error('Error:', error);
-            alert('Gagal mengirim specimen: ' + error.message);
-        }
+        });
     });
 
     // Reset signature
@@ -355,6 +351,49 @@ document.addEventListener('DOMContentLoaded', function() {
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     });
+});
+
+function handleVideoVerificationResponse(response) {
+    if (response.success) {
+        // Show success message
+        Swal.fire({
+            title: 'Berhasil!',
+            text: response.message,
+            icon: 'success',
+            confirmButtonText: 'OK'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Jika ada flag continue, lanjutkan ke halaman specimen
+                if (response.continue) {
+                    window.location.href = '{{ route("specimen.index") }}';
+                }
+            }
+        });
+    } else {
+        // Show error message
+        Swal.fire({
+            title: 'Gagal!',
+            text: response.message,
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    }
+}
+
+// Update di bagian AJAX success handler
+$.ajax({
+    // ... kode existing ...
+    success: function(response) {
+        handleVideoVerificationResponse(response);
+    },
+    error: function(xhr, status, error) {
+        Swal.fire({
+            title: 'Error!',
+            text: 'Terjadi kesalahan saat memproses video',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    }
 });
 </script>
 @endpush 

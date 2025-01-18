@@ -340,6 +340,8 @@
     let isRecording = false;
     let recordingComplete = false;
 
+    const INSTRUCTION_DURATION = 4000; // 4 detik per instruksi
+
     async function startCamera() {
         if (!checkBrowserSupport()) {
             return;
@@ -377,8 +379,56 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
-        startCamera();
+    async function showInitialInstructions() {
+        await Swal.fire({
+            title: '<strong>Perhatian!</strong>',
+            icon: 'warning',
+            html: `
+                <div class="text-start">
+                    <p>Kami akan melakukan verifikasi wajah Anda untuk memastikan data biometrik Anda valid. Mohon ikuti instruksi yang diberikan dan pastikan:</p>
+                    <ul class="mb-3">
+                        <li>Wajah terlihat jelas</li>
+                        <li>Pencahayaan cukup</li>
+                        <li>Tidak menggunakan masker atau kacamata</li>
+                        <li>Tidak ada yang menghalangi wajah</li>
+                        <li>Posisi wajah mengikuti instruksi yang diberikan</li>
+                    </ul>
+                    <p class="mb-0 text-primary">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Klik "Mulai Verifikasi" untuk melanjutkan
+                    </p>
+                </div>
+            `,
+            showCloseButton: true,
+            showCancelButton: true,
+            focusConfirm: false,
+            confirmButtonText: '<i class="bi bi-camera-video"></i> Mulai Verifikasi',
+            confirmButtonColor: '#198754',
+            cancelButtonText: 'Tutup',
+            cancelButtonColor: '#dc3545',
+            customClass: {
+                container: 'my-swal'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                startCamera(); // Mulai proses verifikasi
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', async function() {
+        if (!userEmail) {
+            await Swal.fire({
+                icon: 'error',
+                title: 'Email Tidak Ditemukan',
+                text: 'Silakan melakukan registrasi terlebih dahulu',
+                confirmButtonColor: '#dc3545'
+            });
+            window.location.href = '/register';
+            return;
+        }
+        
+        showInitialInstructions();
     });
 
     function handleAction() {
@@ -416,15 +466,35 @@
         };
 
         mediaRecorder.start();
-        document.getElementById('recordingStatus').textContent = "Recording...";
+        document.getElementById('recordingStatus').textContent = "Sedang Merekam...";
 
         currentInstruction = 0;
         showInstruction();
-        instructionInterval = setInterval(showNextInstruction, 3000);
+        instructionInterval = setInterval(showNextInstruction, INSTRUCTION_DURATION);
     }
 
     function showInstruction() {
-        document.getElementById('currentInstruction').textContent = instructions[currentInstruction];
+        const instructionElement = document.getElementById('currentInstruction');
+        instructionElement.textContent = instructions[currentInstruction];
+        
+        // Tambahkan progress bar untuk setiap instruksi
+        instructionElement.innerHTML = `
+            <div class="alert alert-primary mb-0">
+                <h5 class="alert-heading mb-2">Langkah ${currentInstruction + 1} dari ${instructions.length}</h5>
+                <p class="mb-2">${instructions[currentInstruction]}</p>
+                <div class="progress" style="height: 5px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                         role="progressbar" 
+                         style="width: 0%">
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Animasi progress bar
+        const progressBar = instructionElement.querySelector('.progress-bar');
+        progressBar.style.transition = `width ${INSTRUCTION_DURATION}ms linear`;
+        setTimeout(() => progressBar.style.width = '100%', 50);
     }
 
     function showNextInstruction() {
@@ -451,12 +521,53 @@
         document.getElementById('currentInstruction').textContent = "Silakan klik tombol Kirim";
     }
 
+    let userEmail = localStorage.getItem('registeredEmail');
+
+    async function checkEmailStatus() {
+        try {
+            const response = await fetch('/check-email-status', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: userEmail
+                })
+            });
+
+            const result = await response.json();
+            
+            if (!result.success) {
+                throw new Error(result.message || 'Email tidak valid');
+            }
+
+            return true;
+        } catch (error) {
+            console.error('Error checking email:', error);
+            await Swal.fire({
+                icon: 'error',
+                title: 'Email Tidak Valid',
+                text: 'Email yang digunakan tidak terdaftar',
+                confirmButtonColor: '#dc3545'
+            });
+            return false;
+        }
+    }
+
     async function saveRecording() {
         const button = document.getElementById('actionButton');
         const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
         const progressBar = document.querySelector('.progress-bar');
 
         try {
+            // Cek status email terlebih dahulu
+            const isEmailValid = await checkEmailStatus();
+            if (!isEmailValid) {
+                return;
+            }
+
             button.disabled = true;
             loadingModal.show();
 
@@ -475,6 +586,7 @@
             const base64Video = await blobToBase64(blob);
             const cleanBase64 = base64Video.split(';base64,').pop();
 
+            // Kirim data dengan email yang sudah divalidasi
             const response = await fetch("{{ route('video.verify') }}", {
                 method: 'POST',
                 headers: {
@@ -483,7 +595,9 @@
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    video: cleanBase64
+                    video: cleanBase64,
+                    email: userEmail,
+                    emailStatus: true // tambahkan flag bahwa email sudah dicek
                 })
             });
 
@@ -497,6 +611,7 @@
             loadingModal.hide();
 
             if (result.success) {
+                localStorage.removeItem('registeredEmail');
                 const successModal = new bootstrap.Modal(document.getElementById('successModal'));
                 successModal.show();
             } else {
@@ -506,7 +621,13 @@
         } catch (error) {
             console.error('Error:', error);
             loadingModal.hide();
-            alert('Gagal mengirim video verifikasi: ' + error.message);
+            
+            await Swal.fire({
+                icon: 'error',
+                title: 'Gagal Mengirim Video',
+                text: error.message || 'Terjadi kesalahan saat mengirim video verifikasi',
+                confirmButtonColor: '#dc3545'
+            });
         } finally {
             button.disabled = false;
             button.textContent = 'Kirim';
@@ -540,22 +661,6 @@
                      alt="Logo Kedua" 
                      class="navbar-logo"
                      style="height: 35px; margin-top: -10px;">
-            </div>
-        </div>
-
-        <!-- Alert Notifikasi -->
-        <div class="row justify-content-center mb-4">
-            <div class="col-md-12">
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <div class="d-flex align-items-center">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                        <strong>Perhatian!</strong>
-                    </div>
-                    <hr>
-                    <p class="mb-0">Kami melakukan perekaman terhadap wajah anda untuk verifikasi data biometrik. 
-                    Mohon untuk tidak mengenakan aksesoris di wajah (misal: Kacamata).</p>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
             </div>
         </div>
 

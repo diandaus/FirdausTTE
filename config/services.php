@@ -35,10 +35,9 @@ return [
         ],
     ],
 
-    'digital_signature' => [
-        'url' => env('PERURI_BASE_URL'),
-        'key' => env('PERURI_API_KEY'),
-        'system_id' => env('PERURI_SYSTEM_ID'),
+    'peruri' => [
+    'base_url' => env('PERURI_API_URL'),
+    'api_key' => env('PERURI_API_KEY'),
     ],
 
     'ocr' => [

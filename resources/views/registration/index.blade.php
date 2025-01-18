@@ -85,6 +85,20 @@
                             @enderror
                         </div>
 
+                        <!-- Document Section -->
+                        
+
+                            <div class="form-group mb-3">
+                                <label class="form-label" for="ktp">{{ __('Nomor KTP') }}*</label>
+                                <input type="text" class="form-control @error('ktp') is-invalid @enderror" 
+                                       id="ktp" name="ktp" value="{{ old('ktp') }}" required>
+                                @error('ktp')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            
+                       
                         <!-- Personal Information Section -->
                         <div class="section mb-4">
                             <h5 class="text-primary mb-3">Informasi Pribadi</h5>
@@ -168,50 +182,7 @@
                             </div>
                         </div>
 
-                        <!-- Document Section -->
-                        <div class="section mb-4">
-                            <h5 class="text-primary mb-3">Dokumen</h5>
-
-                            <div class="form-group mb-3">
-                                <label class="form-label" for="ktp">{{ __('Nomor KTP') }}*</label>
-                                <input type="text" class="form-control @error('ktp') is-invalid @enderror" 
-                                       id="ktp" name="ktp" value="{{ old('ktp') }}" required>
-                                @error('ktp')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label class="form-label" for="npwp">{{ __('Nomor NPWP') }}*</label>
-                                <input type="text" class="form-control @error('npwp') is-invalid @enderror" 
-                                       id="npwp" name="npwp" value="{{ old('npwp') }}" required>
-                                @error('npwp')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label class="form-label" for="npwpPhoto">{{ __('Foto NPWP') }}*</label>
-                                <input type="file" class="form-control @error('npwpPhoto') is-invalid @enderror" 
-                                       id="npwpPhoto" name="npwpPhoto" accept="image/*" required
-                                       onchange="previewImage(this, 'npwpPreview')">
-                                <img id="npwpPreview" class="img-preview mt-2" style="max-width: 200px; display: none;">
-                                @error('npwpPhoto')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label class="form-label" for="selfPhoto">{{ __('Foto Diri') }}*</label>
-                                <input type="file" class="form-control @error('selfPhoto') is-invalid @enderror" 
-                                       id="selfPhoto" name="selfPhoto" accept="image/*" required
-                                       onchange="previewImage(this, 'selfPreview')">
-                                <img id="selfPreview" class="img-preview mt-2" style="max-width: 200px; display: none;">
-                                @error('selfPhoto')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-                        </div>
+                        
 
                         <!-- Address Section -->
                         <div class="section mb-4">
@@ -541,8 +512,8 @@
                 </ul>
 
                 <div class="section">
-                    <h6 class="section-title"><span class="section-number">12.</span>
-                    <span class="section-heading">Bahasa</span></h6>
+                    <h6 class="section-title">
+                    <span class="section-heading">12. Bahasa</span></h6>
                         <div class="section-content">
                             <p class="section-intro">Kebijakan Privasi ini dibuat dalam 2 (dua) bahasa, yaitu Bahasa Indonesia dan Bahasa Inggris. Dalam hal terdapat ketidaksesuaian antara satu bahasa dengan bahasa yang lain, maka teks Bahasa Indonesia yang akan berlaku.</p>
         
@@ -550,8 +521,8 @@
                 </div>
 
                 <div class="section">
-                    <h6 class="section-title"><span class="section-number">13.</span>
-                    <span class="section-heading">Perubahan pada Kebijakan Privasi</span></h6>
+                    <h6 class="section-title">
+                    <span class="section-heading">13. Perubahan pada Kebijakan Privasi</span></h6>
                         <div class="section-content">
                             <p class="section-intro">Jika Peruri CA membuat perubahan materipada Kebijakan Privasi ini,Peruri CA akan memberi tahu Anda dengan mengunggah versi terbaru ke situs. Dokumen Kebijakan Privasidan setiap perubahan yang dilakukan dapat diakses secara publik dalam waktu selambat-lambatnya 7 (tujuh) hari kalender setelah disetujui. Setiap perubahan efektif berlaku 30 (tiga puluh) hari kalender setelah dipublikasikan.</p>
         
@@ -559,8 +530,8 @@
                 </div>
                 
                 <div class="section">
-                <h6 class="section-title"><span class="section-number">14.</span>
-                <span class="section-heading">Hubungi kami</span></h6>
+                    <h6 class="section-title">
+                    <span class="section-heading">14. Hubungi kami</span></h6>
                     <div class="section-content">
                         <p class="section-intro">Jika Anda memiliki pertanyaan tentang Kebijakan Privasi ini, silakan hubungi Peruri CA melalui:</p>
                         <div class="contact-info">

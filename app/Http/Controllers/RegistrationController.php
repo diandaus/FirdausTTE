@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use App\Services\PeruriService;
-
+use Illuminate\Support\Facades\Session;
 
 class RegistrationController extends Controller
 {
@@ -30,12 +29,8 @@ class RegistrationController extends Controller
                 'name' => 'required|string|max:255',
                 'phone' => 'required|string|max:20',
                 'email' => 'required|email|max:255',
-                'password' => 'required|string|min:8',
                 'ktp' => 'required|string|size:16',
                 'ktpPhoto' => 'required|image|max:2048',
-                'npwp' => 'required|string|max:20',
-                'npwpPhoto' => 'required|image|max:2048',
-                'selfPhoto' => 'required|image|max:2048',
                 'address' => 'required|string',
                 'city' => 'required|string',
                 'province' => 'required|string',
@@ -48,29 +43,33 @@ class RegistrationController extends Controller
             ]);
 
             if ($validator->fails()) {
+                Log::error('Validation failed', [
+                    'errors' => $validator->errors(),
+                    'input' => $request->all(),
+                ]);
                 return response()->json([
                     'success' => false,
                     'message' => 'Validasi gagal',
-                    'errors' => $validator->errors()
+                    'errors' => $validator->errors(),
                 ], 422);
             }
 
-            // Convert images to base64
+            // Convert images to base64 (only if they exist)
             $ktpPhotoBase64 = base64_encode(file_get_contents($request->file('ktpPhoto')));
-            $npwpPhotoBase64 = base64_encode(file_get_contents($request->file('npwpPhoto')));
-            $selfPhotoBase64 = base64_encode(file_get_contents($request->file('selfPhoto')));
+            $selfPhotoBase64 = $request->hasFile('selfPhoto') 
+                ? base64_encode(file_get_contents($request->file('selfPhoto')))
+                : '';
+            $npwpPhotoBase64 = $request->hasFile('npwpPhoto')
+                ? base64_encode(file_get_contents($request->file('npwpPhoto')))
+                : '';
 
+            // Panggil service Peruri
             $response = $this->peruriService->register([
                 'name' => $request->name,
                 'phone' => $request->phone,
                 'email' => $request->email,
-                'password' => $request->password,
-                'type' => 'INDIVIDUAL',
                 'ktp' => $request->ktp,
                 'ktpPhoto' => $ktpPhotoBase64,
-                'npwp' => $request->npwp,
-                'npwpPhoto' => $npwpPhotoBase64,
-                'selfPhoto' => $selfPhotoBase64,
                 'address' => $request->address,
                 'city' => $request->city,
                 'province' => $request->province,
@@ -79,20 +78,26 @@ class RegistrationController extends Controller
                 'dateOfBirth' => $request->dateOfBirth,
                 'orgUnit' => $request->orgUnit,
                 'workUnit' => $request->workUnit,
-                'position' => $request->position,
+                'position' => $request->position
             ]);
 
-            return response()->json($response);
+            // Simpan nomor telepon ke session
+            Session::put('phone_number', $request->phone);
 
+            // Redirect ke halaman verifikasi
+            return response()->json([
+                'success' => true,
+                'message' => 'Data berhasil dikirim untuk registrasi.',
+            ]);
         } catch (\Exception $e) {
             Log::error('Registration Error', [
                 'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             return response()->json([
                 'success' => false,
-                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage(),
             ], 500);
         }
     }

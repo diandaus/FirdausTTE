@@ -124,32 +124,16 @@ document.addEventListener('DOMContentLoaded', function() {
     if (submitButton) {
         submitButton.addEventListener('click', async function(e) {
             e.preventDefault();
-            console.log('Submit button clicked');
-
+            
             if (!validateForm()) {
                 return false;
             }
-
-            // Tampilkan loading
-            Swal.fire({
-                title: 'Mohon Tunggu',
-                html: 'Sedang memproses pendaftaran...',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
 
             try {
                 const form = document.querySelector('form');
                 const formData = new FormData(form);
                 const emailInput = document.getElementById('email');
                 const emailValue = emailInput?.value || '';
-
-                // Debug: Log form data
-                for (let pair of formData.entries()) {
-                    console.log(pair[0] + ': ' + pair[1]);
-                }
 
                 const response = await fetch(form.action, {
                     method: 'POST',
@@ -158,150 +142,75 @@ document.addEventListener('DOMContentLoaded', function() {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                         'Accept': 'application/json',
                         'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    redirect: 'follow'
+                    }
                 });
-
-                // Debug: Log response details
-                console.log('Response status:', response.status);
-                console.log('Response headers:', response.headers);
 
                 let result;
                 const responseText = await response.text();
-                console.log('Raw response:', responseText);
-
+                
                 try {
                     result = JSON.parse(responseText);
                 } catch (jsonError) {
                     console.error('JSON Parse Error:', jsonError);
-                    throw new Error('Response tidak valid: ' + responseText.substring(0, 100));
+                    throw new Error('Response tidak valid');
                 }
 
-                if (result.success) {
+                if (result.message && (
+                    result.message.includes('Email Already Registered') || 
+                    result.message.toLowerCase().includes('email sudah terdaftar')
+                )) {
                     await Swal.fire({
-                        icon: 'success',
-                        title: 'Registrasi Berhasil!',
+                        icon: 'warning',
+                        title: 'Email Sudah Terdaftar',
                         html: `
                             <div class="text-center">
-                                <div class="mb-4">
-                                    <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
-                                </div>
-                                <p class="mb-4">Data Anda telah berhasil terdaftar di Peruri</p>
+                                <p class="mb-4">Email <strong>${emailValue}</strong> telah terdaftar sebelumnya.</p>
+                                <p class="mb-4">Silakan lanjutkan proses verifikasi wajah atau gunakan email lain.</p>
                                 <div class="d-grid gap-2">
-                                    <button class="btn btn-primary btn-lg proceed-verification">
+                                    <button class="btn btn-primary proceed-verification mb-2">
                                         <i class="bi bi-camera-video me-2"></i>
                                         Lanjutkan Verifikasi Wajah
+                                    </button>
+                                    <button class="btn btn-secondary" data-bs-dismiss="modal">
+                                        Gunakan Email Lain
                                     </button>
                                 </div>
                             </div>
                         `,
                         showConfirmButton: false,
-                        allowOutsideClick: false,
+                        showCloseButton: true,
                         customClass: {
-                            popup: 'animated fadeInDown',
-                            container: 'custom-swal-container'
+                            popup: 'animated fadeInDown'
                         },
                         didRender: () => {
-                            // Tambahkan event listener untuk tombol verifikasi
                             document.querySelector('.proceed-verification').addEventListener('click', function() {
+                                // Simpan email ke localStorage sebelum redirect
+                                localStorage.setItem('registeredEmail', emailValue);
                                 window.location.href = '/video-verification';
                             });
                         }
                     });
 
-                    // Tambahkan animasi CSS
-                    const style = document.createElement('style');
-                    style.textContent = `
-                        .custom-swal-container {
-                            z-index: 1500;
-                        }
-                        .animated {
-                            animation-duration: 0.5s;
-                            animation-fill-mode: both;
-                        }
-                        @keyframes fadeInDown {
-                            from {
-                                opacity: 0;
-                                transform: translate3d(0, -20%, 0);
-                            }
-                            to {
-                                opacity: 1;
-                                transform: translate3d(0, 0, 0);
-                            }
-                        }
-                        .fadeInDown {
-                            animation-name: fadeInDown;
-                        }
-                        .proceed-verification {
-                            background-color: #0d6efd;
-                            border: none;
-                            padding: 15px 25px;
-                            font-size: 1.1rem;
-                            transition: all 0.3s ease;
-                        }
-                        .proceed-verification:hover {
-                            background-color: #0b5ed7;
-                            transform: translateY(-2px);
-                            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.15);
-                        }
-                        .bi-camera-video {
-                            font-size: 1.2rem;
-                            vertical-align: middle;
-                        }
-                    `;
-                    document.head.appendChild(style);
-                } else {
-                    let errorMessage = result.message || 'Terjadi kesalahan saat memproses pendaftaran';
-                    let errorTitle = 'Registrasi Gagal';
-                    let errorIcon = 'error';
-                    
-                    if (result.message && (
-                        result.message.includes('Email Already Registered') || 
-                        result.message.toLowerCase().includes('email sudah terdaftar')
-                    )) {
-                        errorTitle = 'Email Sudah Terdaftar';
-                        errorMessage = `Email <strong>${emailValue}</strong> telah terdaftar sebelumnya.<br>Silakan gunakan alamat email lain.`;
-                        errorIcon = 'warning';
-                        
-                        emailInput?.classList.add('is-invalid');
-                        emailInput?.focus();
-                    }
-
+                    emailInput?.classList.add('is-invalid');
+                    emailInput?.focus();
+                } else if (!result.success) {
                     await Swal.fire({
-                        icon: errorIcon,
-                        title: errorTitle,
-                        html: errorMessage,
+                        icon: 'error',
+                        title: 'Registrasi Gagal',
+                        text: result.message || 'Terjadi kesalahan saat memproses pendaftaran',
                         confirmButtonText: 'Tutup',
                         confirmButtonColor: '#dc3545'
                     });
                 }
             } catch (error) {
                 console.error('Error:', error);
-                
-                // Tampilkan error yang lebih detail
-                let errorMessage = 'Terjadi kesalahan saat menghubungi server.';
-                let errorDetail = error.message || '';
-                
-                if (errorDetail.includes('<!DOCTYPE')) {
-                    errorMessage = 'Server mengalami masalah internal.';
-                    errorDetail = 'Mohon coba beberapa saat lagi.';
-                }
-
                 await Swal.fire({
                     icon: 'error',
                     title: 'Terjadi Kesalahan',
-                    html: `
-                        <div class="text-start">
-                            <p>${errorMessage}</p>
-                            <small class="text-muted">${errorDetail}</small>
-                        </div>
-                    `,
+                    text: 'Mohon coba beberapa saat lagi',
                     confirmButtonText: 'Tutup',
                     confirmButtonColor: '#dc3545'
                 });
-            } finally {
-                // Pastikan loading modal tertutup
-                Swal.close();
             }
         });
     }
@@ -314,76 +223,94 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Helper functions
+    function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function isValidKTP(ktp) {
+        return /^\d{16}$/.test(ktp);
+    }
+
     // Fungsi untuk validasi form
     function validateForm() {
-        const form = document.querySelector('form');
-        if (!form) {
-            console.log('Form not found');
-            return false;
-        }
+        // Hanya field yang wajib diisi
+        const requiredFields = [
+            'name',
+            'phone',
+            'email',
+            'ktp',
+            'ktpPhoto',
+            'address',
+            'city',
+            'province',
+            'gender',
+            'placeOfBirth',
+            'dateOfBirth'
+        ];
 
-        const requiredFields = form.querySelectorAll('[required]');
         let isValid = true;
         let emptyFields = [];
 
         // Reset validasi sebelumnya
+        document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+        document.querySelectorAll('.invalid-feedback').forEach(el => el.remove());
+
+        // Validasi hanya untuk field wajib
         requiredFields.forEach(field => {
-            field.classList.remove('is-invalid');
+            const element = document.getElementById(field);
+            if (!element) return;
+
+            let value;
+            if (element.type === 'file') {
+                value = element.files[0]; // File input
+            } else {
+                value = element.value.trim(); // Text input
+            }
+
+            let isEmpty = element.type === 'file' ? !value : !value || value === '';
             
-            if (!field.value.trim()) {
-                console.log('Empty field found:', field.name);
+            if (isEmpty) {
+                element.classList.add('is-invalid');
+                const feedback = document.createElement('div');
+                feedback.className = 'invalid-feedback';
+                feedback.textContent = 'Field ini wajib diisi';
+                element.parentNode.appendChild(feedback);
+                emptyFields.push(field);
                 isValid = false;
-                field.classList.add('is-invalid');
-                
-                // Ambil label field
-                const label = field.previousElementSibling;
-                const fieldName = label ? label.textContent.replace('*', '').trim() : field.name;
-                emptyFields.push(fieldName);
             }
         });
 
-        if (!isValid) {
-            // Buat list field yang kosong
-            const emptyFieldsList = emptyFields.map(field => `<li>${field}</li>`).join('');
-            
-            // Tampilkan SweetAlert
-            Swal.fire({
-                icon: 'error',
-                title: 'Data Belum Lengkap!',
-                html: `
-                    <div class="text-start">
-                        <p>Mohon lengkapi data berikut:</p>
-                        <ul class="text-start">
-                            ${emptyFieldsList}
-                        </ul>
-                    </div>
-                `,
-                confirmButtonText: 'Periksa Kembali',
-                confirmButtonColor: '#dc3545',
-                showClass: {
-                    popup: 'animate__animated animate__fadeInDown'
-                },
-                hideClass: {
-                    popup: 'animate__animated animate__fadeOutUp'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Scroll ke field pertama yang invalid
-                    const firstInvalidField = document.querySelector('.is-invalid');
-                    if (firstInvalidField) {
-                        firstInvalidField.scrollIntoView({ 
-                            behavior: 'smooth', 
-                            block: 'center' 
-                        });
-                        firstInvalidField.focus();
-                    }
-                }
-            });
-
-            return false;
+        // Log hanya field wajib yang kosong
+        if (emptyFields.length > 0) {
+            console.log('Empty required fields:', emptyFields);
         }
 
-        return true;
+        // Validasi format email jika diisi
+        const email = document.getElementById('email')?.value;
+        if (email && !isValidEmail(email.trim())) {
+            const emailElement = document.getElementById('email');
+            emailElement.classList.add('is-invalid');
+            const feedback = document.createElement('div');
+            feedback.className = 'invalid-feedback';
+            feedback.textContent = 'Format email tidak valid';
+            emailElement.parentNode.appendChild(feedback);
+            isValid = false;
+        }
+
+        // Validasi format KTP jika diisi
+        const ktp = document.getElementById('ktp')?.value;
+        if (ktp && !isValidKTP(ktp.trim())) {
+            const ktpElement = document.getElementById('ktp');
+            ktpElement.classList.add('is-invalid');
+            const feedback = document.createElement('div');
+            feedback.className = 'invalid-feedback';
+            feedback.textContent = 'NIK harus 16 digit angka';
+            ktpElement.parentNode.appendChild(feedback);
+            isValid = false;
+        }
+
+        return isValid;
     }
 
     // Event listener untuk input fields
