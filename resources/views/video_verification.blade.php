@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Video Verifikasi (E-KYC)</title>
+    <title>Video Verifikasi Wajah (E-KYC)</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
@@ -340,7 +340,7 @@
     let isRecording = false;
     let recordingComplete = false;
 
-    const INSTRUCTION_DURATION = 4000; // 4 detik per instruksi
+    const INSTRUCTION_DURATION = 3000; // 3 detik per instruksi
 
     async function startCamera() {
         if (!checkBrowserSupport()) {

@@ -299,7 +299,15 @@ $(document).ready(function () {
         debugLog('Phone number:', phone);
 
         // Tampilkan loading
-        bsLoadingModal.show();
+        Swal.fire({
+            title: 'Mohon Tunggu',
+            text: 'Sedang mencari data...',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            willOpen: () => {
+                Swal.showLoading();
+            }
+        });
 
         $.ajax({
             url: "{{ route('phone.fetch') }}",
@@ -314,13 +322,8 @@ $(document).ready(function () {
             success: function (response) {
                 debugLog('AJAX success response:', response);
                 
-                // Pastikan loading modal tertutup
-                bsLoadingModal.hide();
-                $('.modal-backdrop').remove();
-                $('body').removeClass('modal-open').css({
-                    'overflow': '',
-                    'padding-right': ''
-                });
+                // Tutup loading
+                Swal.close();
                 
                 if (response.status === 'success' && response.data) {
                     let user = response.data;
@@ -505,6 +508,9 @@ $(document).ready(function () {
             error: function(xhr, status, error) {
                 debugLog('AJAX error:', { xhr, status, error });
                 
+                // Tutup loading
+                Swal.close();
+                
                 // Pastikan loading modal tertutup
                 bsLoadingModal.hide();
                 $('.modal-backdrop').remove();
@@ -558,8 +564,16 @@ $(document).ready(function () {
         e.preventDefault();
         debugLog('Submit button clicked');
         
-        // Show loading modal
-        bsLoadingModal.show();
+        // Tampilkan loading
+        Swal.fire({
+            title: 'Mohon Tunggu',
+            text: 'Sedang memproses data...',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            willOpen: () => {
+                Swal.showLoading();
+            }
+        });
         
         const formData = new FormData();
         formData.append('phone', $('#hiddenForm input[name="phone"]').val());
@@ -574,8 +588,8 @@ $(document).ready(function () {
             success: function(response) {
                 debugLog('Submit success response:', response);
                 
-                // Pastikan modal loading tertutup dan bersihkan
-                cleanupModals();
+                // Tutup loading
+                Swal.close();
                 
                 // Handle response
                 let responseData = response;
@@ -638,16 +652,8 @@ $(document).ready(function () {
             error: function(xhr, status, error) {
                 debugLog('Submit error:', { xhr, status, error });
                 
-                // Pastikan modal loading tertutup
-                if (bsLoadingModal) {
-                    bsLoadingModal.hide();
-                }
-                if (bsPhoneModal) {
-                    bsPhoneModal.hide();
-                }
-                
-                // Bersihkan modal
-                cleanupModals();
+                // Tutup loading
+                Swal.close();
                 
                 let errorMessage = 'Terjadi kesalahan saat registrasi';
                 try {
