@@ -252,6 +252,19 @@
             content: '';
             animation: ellipsis 1.5s infinite;
         }
+
+        #actionButton {
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        /* Tambahkan active state untuk feedback visual */
+        #actionButton:active {
+            transform: scale(0.98);
+        }
     </style>
     <script>
     const isLocalNetwork = window.location.hostname === 'localhost' || 
@@ -379,14 +392,13 @@
         }
     }
 
-    async function showInitialInstructions() {
-        await Swal.fire({
-            title: '<strong>Perhatian!</strong>',
-            icon: 'warning',
+    function showInitialInstructions() {
+        Swal.fire({
+            title: 'Petunjuk Verifikasi Wajah',
             html: `
                 <div class="text-start">
-                    <p>Kami akan melakukan verifikasi wajah Anda untuk memastikan data biometrik Anda valid. Mohon ikuti instruksi yang diberikan dan pastikan:</p>
-                    <ul class="mb-3">
+                    <p class="mb-3">Pastikan:</p>
+                    <ul class="text-start mb-3">
                         <li>Wajah terlihat jelas</li>
                         <li>Pencahayaan cukup</li>
                         <li>Tidak menggunakan masker atau kacamata</li>
@@ -428,15 +440,35 @@
             return;
         }
         
+        const actionButton = document.getElementById('actionButton');
+        if (actionButton) {
+            handleAction();
+        }
+        
         showInitialInstructions();
     });
 
     function handleAction() {
         const button = document.getElementById('actionButton');
+        
+        // Tambahkan touch event untuk mobile
+        if ('ontouchstart' in window) {
+            button.addEventListener('touchstart', function(e) {
+                e.preventDefault(); // Prevent default touch behavior
+                processAction();
+            });
+        }
+        
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            processAction();
+        });
+    }
 
+    function processAction() {
         if (!isRecording && !recordingComplete) {
             startRecording();
-            button.style.display = 'none';
+            document.getElementById('actionButton').style.display = 'none';
         } else if (recordingComplete) {
             saveRecording();
         }
@@ -654,7 +686,7 @@
         <p id="recordingStatus"></p>
 
         <div class="button-container">
-            <button id="actionButton" onclick="handleAction()">Mulai Verifikasi</button>
+            <button id="actionButton">Mulai Verifikasi</button>
         </div>
     </div>
 
