@@ -10,8 +10,15 @@ use App\Http\Controllers\PhoneVerificationController;
 use App\Http\Controllers\IdentityVerificationController;
 use Illuminate\Support\Facades\Route;
 
+// Phone Number Routes (as home)
+Route::get('/', [PhoneNumberController::class, 'index'])->name('home');
+Route::get('/phone', [PhoneNumberController::class, 'index'])->name('phone.index');
+Route::post('/phone/fetch', [PhoneNumberController::class, 'fetchData'])->name('phone.fetch');
+Route::post('/phone/submit', [PhoneNumberController::class, 'submit'])
+    ->name('phone.submit')
+    ->middleware(['web']);
+
 // Registration Routes
-Route::get('/', [RegistrationController::class, 'index'])->name('home');
 Route::get('/registration', [RegistrationController::class, 'index'])->name('registration.index');
 Route::post('/registration', [RegistrationController::class, 'store'])->name('registration.store');
 
@@ -27,13 +34,6 @@ Route::post('/ocr-ktp', [OCRController::class, 'processKTP'])->name('ocr.ktp');
 // Specimen Routes
 Route::get('/specimen', [SpecimenController::class, 'index'])->name('specimen.index');
 Route::post('/specimen/send', [SpecimenController::class, 'send'])->name('specimen.send');
-
-// No Telepon 
-Route::get('/phone', [PhoneNumberController::class, 'index'])->name('phone.index');
-Route::post('/phone/fetch', [PhoneNumberController::class, 'fetchData'])->name('phone.fetch');
-Route::post('/phone/submit', [PhoneNumberController::class, 'submit'])
-    ->name('phone.submit')
-    ->middleware(['web']);
 
 // Akun Peruri Routes - menggunakan resource
 Route::resource('akun-peruri', AkunPeruriController::class)->only([

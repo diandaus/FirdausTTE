@@ -63,18 +63,26 @@ class VideoVerificationController extends Controller
                 'videoSize' => strlen($base64Video)
             ]);
 
-            // Send to Peruri service with correct parameter name (videoStream)
+            // Send to Peruri service
             $response = $this->peruriService->verifyVideo([
                 'email' => $email,
-                'videoStream' => $base64Video  // Changed from 'video' to 'videoStream'
+                'videoStream' => $base64Video
             ]);
 
             if ($response['success']) {
-                DB::table('akun_peruri')
+                // Simpan email ke session
+                session(['registration_email' => $email]);
+
+                // Update database dengan nilai yang valid
+                DB::table('peruri_registrations')
                     ->where('email', $email)
                     ->update([
-                        'video_verification_status' => $response['status'] ?? 'PENDING_VERIFICATION',
-                        'video_verification_date' => now(),
+                        'video_response' => json_encode([  // Encode response sebagai JSON
+                            'status' => $response['status'] ?? 'PENDING_VERIFICATION',
+                            'message' => $response['message'] ?? null,
+                            'data' => $response['data'] ?? null
+                        ]),
+                        'video_verified_at' => now(),
                         'updated_at' => now()
                     ]);
             }
@@ -112,7 +120,7 @@ class VideoVerificationController extends Controller
             Log::info('Checking email status', ['email' => $email]);
 
             // Cek status email di database
-            $userData = DB::table('akun_peruri')
+            $userData = DB::table('peruri_registrations')
                 ->where('email', $email)
                 ->first();
 

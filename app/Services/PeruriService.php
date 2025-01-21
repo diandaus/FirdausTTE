@@ -152,7 +152,7 @@ class PeruriService
                 'Authorization' => 'Bearer ' . $jwt
             ])
             ->withOptions([
-                'debug' => true,
+                'debug' => false,
                 'verify' => false
             ])
             ->post($endpoint, $registrationData);

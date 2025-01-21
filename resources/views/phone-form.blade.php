@@ -17,6 +17,9 @@
     <style>
         body {
             background-color: #f8f9fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .card {
@@ -65,6 +68,26 @@
             
             .divider {
                 margin: 0 0.5rem;
+            }
+        }
+
+        .footer-links {
+            margin-top: auto;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .footer-links a {
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: #0d6efd !important;
+        }
+
+        @media (max-width: 576px) {
+            .footer-links {
+                padding: 1rem 0;
             }
         }
     </style>
@@ -182,6 +205,19 @@
     </div>
 </div>
 
+<!-- Footer -->
+<div class="footer-links text-center py-4 mt-auto">
+    <div class="container">
+        <small class="text-muted">
+            <a href="#" class="text-decoration-none text-muted me-2">Syarat dan Ketentuan</a> | 
+            <a href="#" class="text-decoration-none text-muted ms-2">Kebijakan Privasi</a>
+            <div class="mt-2">
+                © {{ date('Y') }} RS Islam Ibnu Sina Sigli. All rights reserved
+            </div>
+        </small>
+    </div>
+</div>
+
 <!-- Script -->
 <script>
 $(document).ready(function () {
@@ -206,14 +242,47 @@ $(document).ready(function () {
     });
     const bsPhoneModal = new bootstrap.Modal(phoneModal);
 
-    // Fungsi untuk membersihkan modal
+    // Fungsi untuk membersihkan modal yang lebih menyeluruh
     function cleanupModals() {
         debugLog('Cleaning up modals');
+        
+        // Tutup semua modal yang aktif
+        $('.modal').modal('hide');
+        
+        // Hapus semua backdrop modal
         $('.modal-backdrop').remove();
+        
+        // Bersihkan state modal dari body
         $('body').removeClass('modal-open').css({
             'overflow': '',
             'padding-right': ''
         });
+        
+        // Reset loading spinner
+        $('.spinner-border').parent().addClass('d-none');
+        
+        // Pastikan tombol-tombol bisa diklik lagi
+        $('.btn').prop('disabled', false);
+    }
+
+    // Tambahkan event handler untuk semua modal saat ditutup
+    $('.modal').on('hidden.bs.modal', function (e) {
+        debugLog('Modal hidden event triggered');
+        cleanupModals();
+    });
+
+    // Update event handler SweetAlert
+    function showSweetAlert(options) {
+        // Pastikan modal dibersihkan sebelum menampilkan SweetAlert
+        cleanupModals();
+        
+        setTimeout(() => {
+            Swal.fire(options).then((result) => {
+                if (result.isConfirmed) {
+                    cleanupModals();
+                }
+            });
+        }, 100);
     }
 
     // Handle form submit
@@ -221,7 +290,7 @@ $(document).ready(function () {
         e.preventDefault();
         debugLog('Form submitted');
         
-        // Reset dan bersihkan
+        // Reset state
         $('#modalContent').empty();
         $('#hiddenForm').empty();
         cleanupModals();
@@ -405,8 +474,8 @@ $(document).ready(function () {
                                 <p class="mb-3">Nomor telepon <strong>${phone}</strong> tidak terdaftar.</p>
                                 <p class="mb-2">Silakan hubungi Manajemen Rumah Sakit untuk konfirmasi data Anda:</p>
                                 <ul class="mt-2 mb-0">
-                                    <li>Telepon: (021) XXXXXXXX</li>
-                                    <li>Email: admin@rs-example.com</li>
+                                    <li>Telp: 0821-2939-4621 (Maulidar)</li>
+                                    <li>Telp: 0853-5983-1390 (IT RS)</li>
                                 </ul>
                             </div>
                         `,
@@ -492,15 +561,9 @@ $(document).ready(function () {
         // Show loading modal
         bsLoadingModal.show();
         
-        // Get phone number from hidden form
         const formData = new FormData();
         formData.append('phone', $('#hiddenForm input[name="phone"]').val());
         formData.append('_token', $('meta[name="csrf-token"]').attr('content'));
-        
-        // Tambahkan debug untuk melihat data yang dikirim
-        debugLog('Sending data:', {
-            phone: $('#hiddenForm input[name="phone"]').val()
-        });
         
         $.ajax({
             url: "{{ route('phone.submit') }}",
@@ -511,39 +574,66 @@ $(document).ready(function () {
             success: function(response) {
                 debugLog('Submit success response:', response);
                 
-                // Pastikan modal loading tertutup
-                if (bsLoadingModal) {
-                    bsLoadingModal.hide();
-                }
-                if (bsPhoneModal) {
-                    bsPhoneModal.hide();
-                }
-                
-                // Bersihkan modal sebelum menampilkan SweetAlert
+                // Pastikan modal loading tertutup dan bersihkan
                 cleanupModals();
                 
-                // Store email in localStorage for video verification
-                if (response.data && response.data.email) {
-                    localStorage.setItem('registeredEmail', response.data.email);
-                    debugLog('Email stored in localStorage:', response.data.email);
-                }
+                // Handle response
+                let responseData = response;
                 
-                // Tampilkan SweetAlert setelah semua modal dibersihkan
-                setTimeout(() => {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil!',
-                        text: 'Data berhasil diregistrasi ke Peruri',
-                        confirmButtonText: 'Lanjutkan ke Verifikasi Wajah',
-                        confirmButtonColor: '#28a745',
-                        allowOutsideClick: false
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            debugLog('Redirecting to video verification');
-                            window.location.href = "{{ route('video-verification.index') }}";
+                // Jika response adalah string, coba parse sebagai JSON
+                if (typeof response === 'string') {
+                    try {
+                        // Cari JSON object di dalam response string
+                        const jsonStr = response.substring(
+                            response.lastIndexOf('{'),
+                            response.lastIndexOf('}') + 1
+                        );
+                        responseData = JSON.parse(jsonStr);
+                    } catch (e) {
+                        console.error('Error parsing response:', e);
+                        // Jika parsing gagal, cek apakah ada data success di response
+                        if (response.includes('"status":"success"')) {
+                            responseData = {
+                                status: 'success',
+                                message: 'Registrasi berhasil!'
+                            };
                         }
+                    }
+                }
+
+                // Jika response menunjukkan success
+                if (responseData && (responseData.status === 'success' || response.includes('"status":"success"'))) {
+                    // Store email if available
+                    if (responseData.data && responseData.data.email) {
+                        localStorage.setItem('registeredEmail', responseData.data.email);
+                    }
+                    
+                    // Show success message
+                    setTimeout(() => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: 'Data berhasil diregistrasi ke Peruri',
+                            confirmButtonText: 'Lanjutkan ke Verifikasi Wajah',
+                            confirmButtonColor: '#28a745',
+                            allowOutsideClick: false
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                debugLog('Redirecting to video verification');
+                                window.location.href = "{{ route('video-verification.index') }}";
+                            }
+                        });
+                    }, 100);
+                } else {
+                    // Jika tidak success, tampilkan error
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: responseData.message || 'Terjadi kesalahan saat registrasi',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#dc3545'
                     });
-                }, 100);
+                }
             },
             error: function(xhr, status, error) {
                 debugLog('Submit error:', { xhr, status, error });
@@ -556,7 +646,7 @@ $(document).ready(function () {
                     bsPhoneModal.hide();
                 }
                 
-                // Bersihkan modal sebelum menampilkan SweetAlert
+                // Bersihkan modal
                 cleanupModals();
                 
                 let errorMessage = 'Terjadi kesalahan saat registrasi';
@@ -577,9 +667,6 @@ $(document).ready(function () {
                         confirmButtonColor: '#dc3545'
                     });
                 }, 100);
-            },
-            complete: function() {
-                debugLog('Ajax request completed');
             }
         });
     });
@@ -610,6 +697,20 @@ $(document).ready(function () {
                 responseJSON: xhr.responseJSON
             });
         }
+    });
+
+    // Tambahkan event handler untuk ESC key
+    $(document).on('keydown', function(e) {
+        if (e.key === 'Escape') {
+            debugLog('ESC key pressed');
+            cleanupModals();
+        }
+    });
+
+    // Update AJAX complete handler
+    $(document).ajaxComplete(function(event, xhr, settings) {
+        debugLog('AJAX request completed');
+        cleanupModals();
     });
 });
 </script>

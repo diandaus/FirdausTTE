@@ -72,28 +72,21 @@ class SpecimenController extends Controller
             ]);
 
             if ($response['success']) {
-                // Update dengan kolom yang benar
-                DB::table('akun_peruri')
-                    ->where('email', $email)
-                    ->update([
-                        'specimen_status' => $response['status'] ?? 'VERIFIED',
-                        'specimen_date' => now(),
-                        'specimen_data' => $specimenBase64, // Simpan data specimen
-                        'updated_at' => now()
-                    ]);
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Specimen berhasil dikirim'
+                ]);
             }
-
-            return response()->json($response);
-
-        } catch (Exception $e) {
-            Log::error('Specimen submission error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
 
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal mengirim specimen: ' . $e->getMessage()
+                'message' => $response['message'] ?? 'Gagal mengirim specimen'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
             ], 500);
         }
     }

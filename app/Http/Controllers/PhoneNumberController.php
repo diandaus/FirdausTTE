@@ -75,18 +75,6 @@ class PhoneNumberController extends Controller
 
             \Log::info('User data found', ['userData' => $userData]);
 
-            // Check if already registered
-            if ($userData->status === 'registered') {
-                \Log::info('User already registered', ['email' => $userData->email]);
-                return response()->json([
-                    'status' => 'success',
-                    'message' => 'Data sudah teregistrasi ke Peruri',
-                    'data' => [
-                        'email' => $userData->email
-                    ]
-                ]);
-            }
-
             // Prepare data for Peruri registration
             $registrationData = [
                 'name' => $userData->name,
@@ -113,15 +101,15 @@ class PhoneNumberController extends Controller
             \Log::info('Peruri registration result', ['result' => $registrationResult]);
 
             if ($registrationResult['success']) {
-                // Update registration status in database
-                DB::table('akun_peruri')
-                    ->where('phone', $request->phone)
-                    ->update([
-                        'status' => 'registered',
-                        'peruri_registration_date' => now(),
-                        'peruri_response' => json_encode($registrationResult['data']),
-                        'updated_at' => now()
-                    ]);
+                // Create record in peruri_registration table
+                DB::table('peruri_registrations')->insert([
+                    'name' => $userData->name,
+                    'email' => $userData->email,
+                    'registered_at' => now(),
+                    'registration_response' => json_encode($registrationResult['data']),
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
 
                 \Log::info('Registration successful, sending response', [
                     'email' => $userData->email,
@@ -137,7 +125,8 @@ class PhoneNumberController extends Controller
                             'peruri_response' => $registrationResult['data']
                         ]
                     ])
-                    ->header('Content-Type', 'application/json');
+                    ->header('Content-Type', 'application/json')
+                    ->header('X-Debug-Info', 'none');
             }
 
             \Log::warning('Registration failed', ['result' => $registrationResult]);

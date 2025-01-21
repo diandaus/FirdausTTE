@@ -98,7 +98,7 @@
 
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary w-100">
-                                {{ __('Kirim Specimen') }}
+                                {{ __('Kirim Specimen Tanda Tangan') }}
                             </button>
                         </div>
                     </form>
@@ -116,8 +116,8 @@
                     <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
                 </div>
                 <h4 class="mb-3">Terima Kasih!</h4>
-                <p class="text-muted mb-4">Specimen tanda tangan Anda telah berhasil dikirim. Silakan tunggu proses verifikasi selanjutnya.</p>
-                <a href="{{ route('registration.index') }}" class="btn btn-primary btn-lg w-100">
+                <p class="text-muted mb-4">Specimen tanda tangan Anda telah berhasil dikirim. Status penerbitan Sertifikat Anda akan segera diproses.</p>
+                <a href="{{ route('phone.index') }}" class="btn btn-primary btn-lg w-100">
                     Selesai
                 </a>
             </div>
@@ -285,48 +285,64 @@ $(document).ready(function() {
         }
     });
 
-    // Update form submission
+    // Jika ada success message dari session, tampilkan modal sukses
+    @if(session('success'))
+        $('#successModal').modal('show');
+    @endif
+
+    // Handle form submission
     $('#specimenForm').on('submit', function(e) {
         e.preventDefault();
         
+        // Tampilkan loading
+        Swal.fire({
+            title: 'Mohon Tunggu',
+            text: 'Sedang memproses specimen...',
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            willOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        // Get form data
         const formData = new FormData(this);
-        
+
+        // Send AJAX request
         $.ajax({
             url: $(this).attr('action'),
             type: 'POST',
             data: formData,
             processData: false,
             contentType: false,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
             success: function(response) {
+                Swal.close();
+                
                 if (response.success) {
-                    Swal.fire({
-                        title: 'Berhasil!',
-                        text: response.message,
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            $('#successModal').modal('show');
-                        }
-                    });
+                    // Tampilkan modal sukses
+                    $('#successModal').modal('show');
                 } else {
                     Swal.fire({
-                        title: 'Gagal!',
-                        text: response.message,
                         icon: 'error',
-                        confirmButtonText: 'OK'
+                        title: 'Gagal!',
+                        text: response.message || 'Terjadi kesalahan saat mengirim specimen',
+                        confirmButtonColor: '#dc3545'
                     });
                 }
             },
-            error: function(xhr, status, error) {
+            error: function(xhr) {
+                Swal.close();
+                
+                let errorMessage = 'Terjadi kesalahan saat mengirim specimen';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+                
                 Swal.fire({
-                    title: 'Error!',
-                    text: 'Terjadi kesalahan saat mengirim specimen',
                     icon: 'error',
-                    confirmButtonText: 'OK'
+                    title: 'Gagal!',
+                    text: errorMessage,
+                    confirmButtonColor: '#dc3545'
                 });
             }
         });
@@ -351,49 +367,6 @@ $(document).ready(function() {
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     });
-});
-
-function handleVideoVerificationResponse(response) {
-    if (response.success) {
-        // Show success message
-        Swal.fire({
-            title: 'Berhasil!',
-            text: response.message,
-            icon: 'success',
-            confirmButtonText: 'OK'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Jika ada flag continue, lanjutkan ke halaman specimen
-                if (response.continue) {
-                    window.location.href = '{{ route("specimen.index") }}';
-                }
-            }
-        });
-    } else {
-        // Show error message
-        Swal.fire({
-            title: 'Gagal!',
-            text: response.message,
-            icon: 'error',
-            confirmButtonText: 'OK'
-        });
-    }
-}
-
-// Update di bagian AJAX success handler
-$.ajax({
-    // ... kode existing ...
-    success: function(response) {
-        handleVideoVerificationResponse(response);
-    },
-    error: function(xhr, status, error) {
-        Swal.fire({
-            title: 'Error!',
-            text: 'Terjadi kesalahan saat memproses video',
-            icon: 'error',
-            confirmButtonText: 'OK'
-        });
-    }
 });
 </script>
 @endpush 

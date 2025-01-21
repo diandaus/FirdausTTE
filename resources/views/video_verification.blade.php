@@ -523,51 +523,12 @@
 
     let userEmail = localStorage.getItem('registeredEmail');
 
-    async function checkEmailStatus() {
-        try {
-            const response = await fetch('/check-email-status', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: userEmail
-                })
-            });
-
-            const result = await response.json();
-            
-            if (!result.success) {
-                throw new Error(result.message || 'Email tidak valid');
-            }
-
-            return true;
-        } catch (error) {
-            console.error('Error checking email:', error);
-            await Swal.fire({
-                icon: 'error',
-                title: 'Email Tidak Valid',
-                text: 'Email yang digunakan tidak terdaftar',
-                confirmButtonColor: '#dc3545'
-            });
-            return false;
-        }
-    }
-
     async function saveRecording() {
         const button = document.getElementById('actionButton');
         const loadingModal = new bootstrap.Modal(document.getElementById('loadingModal'));
         const progressBar = document.querySelector('.progress-bar');
 
         try {
-            // Cek status email terlebih dahulu
-            const isEmailValid = await checkEmailStatus();
-            if (!isEmailValid) {
-                return;
-            }
-
             button.disabled = true;
             loadingModal.show();
 
@@ -586,7 +547,7 @@
             const base64Video = await blobToBase64(blob);
             const cleanBase64 = base64Video.split(';base64,').pop();
 
-            // Kirim data dengan email yang sudah divalidasi
+            // Kirim video langsung tanpa pengecekan email
             const response = await fetch("{{ route('video.verify') }}", {
                 method: 'POST',
                 headers: {
@@ -596,8 +557,7 @@
                 },
                 body: JSON.stringify({
                     video: cleanBase64,
-                    email: userEmail,
-                    emailStatus: true // tambahkan flag bahwa email sudah dicek
+                    email: userEmail
                 })
             });
 
@@ -610,13 +570,7 @@
 
             loadingModal.hide();
 
-            if (result.success) {
-                localStorage.removeItem('registeredEmail');
-                const successModal = new bootstrap.Modal(document.getElementById('successModal'));
-                successModal.show();
-            } else {
-                throw new Error(result.message || 'Gagal mengirim video verifikasi');
-            }
+            handleVideoVerificationResponse(result);
 
         } catch (error) {
             console.error('Error:', error);
@@ -641,6 +595,31 @@
             reader.onerror = reject;
             reader.readAsDataURL(blob);
         });
+    }
+
+    function handleVideoVerificationResponse(response) {
+        if (response.success) {
+            // Show success message
+            Swal.fire({
+                title: 'Berhasil!',
+                text: response.message,
+                icon: 'success',
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.isConfirmed || result.isDismissed) {
+                    // Redirect ke halaman specimen tanpa menampilkan error
+                    window.location.href = '{{ route("specimen.index") }}';
+                }
+            });
+        } else {
+            // Show error message
+            Swal.fire({
+                title: 'Gagal!',
+                text: response.message,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
     }
 </script>
 
