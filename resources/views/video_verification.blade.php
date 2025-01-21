@@ -264,9 +264,7 @@
                 video: {
                     width: { ideal: 640 },
                     height: { ideal: 480 },
-                    facingMode: "user",
-                    aspectRatio: { ideal: 1.333333 },
-                    frameRate: { ideal: 30 }
+                    facingMode: "user"
                 },
                 audio: false
             };
@@ -278,78 +276,55 @@
                 ];
             }
 
-            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                constraints.video = {
-                    facingMode: "user",
-                    width: { ideal: 1280 },
-                    height: { ideal: 720 }
-                };
-            }
-
-            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                throw new Error('Browser Anda tidak mendukung akses kamera. Silakan gunakan browser terbaru seperti Chrome atau Firefox.');
-            }
-
             const stream = await navigator.mediaDevices.getUserMedia(constraints);
             const video = document.getElementById('video');
-            
-            if (!video) {
-                throw new Error('Element video tidak ditemukan');
-            }
+            video.srcObject = stream;
 
-            video.onerror = function(err) {
-                console.error('Video error:', err);
-                showError('Terjadi kesalahan saat mengakses kamera');
+            video.onloadedmetadata = () => {
+                video.play();
             };
 
-            video.srcObject = stream;
-            video.play().catch(function(err) {
-                console.error('Error playing video:', err);
-                showError('Tidak dapat memulai video');
-            });
-
-            return true;
+            return stream;
         } catch (error) {
-            console.error('Setup camera error:', error);
-            
-            let errorMessage = 'Terjadi kesalahan saat mengakses kamera. ';
-            
-            if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
-                errorMessage = 'Akses kamera ditolak. Mohon izinkan akses kamera dan refresh halaman.';
-            } else if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
-                errorMessage = 'Kamera tidak ditemukan. Pastikan perangkat Anda memiliki kamera yang berfungsi.';
-            } else if (error.name === 'NotReadableError' || error.name === 'TrackStartError') {
-                errorMessage = 'Kamera sedang digunakan oleh aplikasi lain. Tutup aplikasi lain yang menggunakan kamera.';
+            console.error('Error:', error);
+            if (error.name === 'NotAllowedError') {
+                alert('Izin kamera ditolak. Silakan izinkan akses kamera di pengaturan browser Anda.');
+            } else if (error.name === 'NotFoundError') {
+                alert('Kamera tidak ditemukan.');
+            } else {
+                alert('Error mengakses kamera: ' + error.message);
             }
-
-            showError(errorMessage);
-            return false;
+            throw error;
         }
     }
 
-    function showError(message) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Gagal Mengakses Kamera',
-            text: message,
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#dc3545'
-        });
-    }
-
-    function checkBrowserCompatibility() {
-        const browser = {
-            chrome: !!window.chrome,
-            firefox: typeof InstallTrigger !== 'undefined',
-            safari: /^((?!chrome|android).)*safari/i.test(navigator.userAgent),
-            edge: /Edge/.test(navigator.userAgent)
-        };
-
-        if (!browser.chrome && !browser.firefox && !browser.edge) {
-            showError('Browser yang Anda gunakan mungkin tidak mendukung fitur kamera sepenuhnya. Disarankan menggunakan Chrome, Firefox, atau Edge terbaru.');
+    function checkBrowserSupport() {
+        if (!navigator.mediaDevices && !navigator.getUserMedia && 
+            !navigator.webkitGetUserMedia && !navigator.mozGetUserMedia) {
+            alert('Browser Anda tidak mendukung akses kamera. Silakan gunakan browser terbaru.');
             return false;
         }
         return true;
+    }
+
+    if (navigator.mediaDevices === undefined) {
+        navigator.mediaDevices = {};
+    }
+
+    if (navigator.mediaDevices.getUserMedia === undefined) {
+        navigator.mediaDevices.getUserMedia = function(constraints) {
+            const getUserMedia = navigator.webkitGetUserMedia || 
+                               navigator.mozGetUserMedia ||
+                               navigator.msGetUserMedia;
+
+            if (!getUserMedia) {
+                return Promise.reject(new Error('Browser Anda tidak mendukung akses kamera.')); 
+            }
+
+            return new Promise(function(resolve, reject) {
+                getUserMedia.call(navigator, constraints, resolve, reject);
+            });
+        };
     }
 
     let mediaRecorder;
@@ -368,7 +343,7 @@
     const INSTRUCTION_DURATION = 3000; // 3 detik per instruksi
 
     async function startCamera() {
-        if (!checkBrowserCompatibility()) {
+        if (!checkBrowserSupport()) {
             return;
         }
 
