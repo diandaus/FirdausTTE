@@ -252,19 +252,6 @@
             content: '';
             animation: ellipsis 1.5s infinite;
         }
-
-        #actionButton {
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-            cursor: pointer;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-        
-        /* Tambahkan active state untuk feedback visual */
-        #actionButton:active {
-            transform: scale(0.98);
-        }
     </style>
     <script>
     const isLocalNetwork = window.location.hostname === 'localhost' || 
@@ -353,7 +340,7 @@
     let isRecording = false;
     let recordingComplete = false;
 
-    const INSTRUCTION_DURATION = 3000; // 3 detik per instruksi
+    const INSTRUCTION_DURATION = 2000; // 2 detik per instruksi
 
     async function startCamera() {
         if (!checkBrowserSupport()) {
@@ -392,13 +379,14 @@
         }
     }
 
-    function showInitialInstructions() {
-        Swal.fire({
-            title: 'Petunjuk Verifikasi Wajah',
+    async function showInitialInstructions() {
+        await Swal.fire({
+            title: '<strong>Perhatian!</strong>',
+            icon: 'warning',
             html: `
                 <div class="text-start">
-                    <p class="mb-3">Pastikan:</p>
-                    <ul class="text-start mb-3">
+                    <p>Kami akan melakukan verifikasi wajah Anda untuk memastikan data biometrik Anda valid. Mohon ikuti instruksi yang diberikan dan pastikan:</p>
+                    <ul class="mb-3">
                         <li>Wajah terlihat jelas</li>
                         <li>Pencahayaan cukup</li>
                         <li>Tidak menggunakan masker atau kacamata</li>
@@ -440,35 +428,15 @@
             return;
         }
         
-        const actionButton = document.getElementById('actionButton');
-        if (actionButton) {
-            handleAction();
-        }
-        
         showInitialInstructions();
     });
 
     function handleAction() {
         const button = document.getElementById('actionButton');
-        
-        // Tambahkan touch event untuk mobile
-        if ('ontouchstart' in window) {
-            button.addEventListener('touchstart', function(e) {
-                e.preventDefault(); // Prevent default touch behavior
-                processAction();
-            });
-        }
-        
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            processAction();
-        });
-    }
 
-    function processAction() {
         if (!isRecording && !recordingComplete) {
             startRecording();
-            document.getElementById('actionButton').style.display = 'none';
+            button.style.display = 'none';
         } else if (recordingComplete) {
             saveRecording();
         }
@@ -480,15 +448,32 @@
         recordedChunks = [];
         const stream = document.getElementById('video').srcObject;
 
-        const options = {
-            mimeType: 'video/webm;codecs=h264',
-            videoBitsPerSecond: 2500000
-        };
+        // Try different MIME types in order of preference
+        const mimeTypes = [
+            'video/webm;codecs=h264',
+            'video/webm;codecs=vp9',
+            'video/webm;codecs=vp8',
+            'video/webm',
+            'video/mp4'
+        ];
+
+        let options = null;
+        for (const mimeType of mimeTypes) {
+            if (MediaRecorder.isTypeSupported(mimeType)) {
+                options = {
+                    mimeType: mimeType,
+                    videoBitsPerSecond: 2500000
+                };
+                break;
+            }
+        }
 
         try {
-            mediaRecorder = new MediaRecorder(stream, options);
+            mediaRecorder = options ? new MediaRecorder(stream, options) : new MediaRecorder(stream);
         } catch (e) {
-            mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+            console.error('MediaRecorder error:', e);
+            alert('Error: Perekaman video tidak didukung pada perangkat ini. Silakan gunakan perangkat atau browser lain.');
+            return;
         }
 
         mediaRecorder.ondataavailable = function(event) {
@@ -686,7 +671,7 @@
         <p id="recordingStatus"></p>
 
         <div class="button-container">
-            <button id="actionButton">Mulai Verifikasi</button>
+            <button id="actionButton" onclick="handleAction()">Mulai Verifikasi</button>
         </div>
     </div>
 
