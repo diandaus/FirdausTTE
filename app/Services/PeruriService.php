@@ -36,7 +36,7 @@ class PeruriService
     {
         try {
             $baseUrl = rtrim($this->baseUrl, '/');
-            $endpoint = $baseUrl . '/jwtSandbox/1.0/getJsonWebToken/v1';
+            $endpoint = $baseUrl . '/jwt/1.0/getJsonWebToken/v1';
             
             $response = Http::withHeaders([
                 'Content-Type' => 'application/json',
@@ -134,7 +134,7 @@ class PeruriService
     protected function sendRegistrationRequest($jwt, $registrationData)
     {
         $baseUrl = rtrim($this->baseUrl, '/');
-        $endpoint = $baseUrl . '/digitalSignatureFullJwtSandbox/1.0/registration/v1';
+        $endpoint = $baseUrl . '/digitalSignatureRSIslamIbnuSinaSigli/1.0/registration/v1';
 
         Log::info('Registration Request Details', [
             'endpoint' => $endpoint,
@@ -265,7 +265,7 @@ class PeruriService
             ];
 
             $baseUrl = rtrim($this->baseUrl, '/');
-            $endpoint = $baseUrl . '/digitalSignatureFullJwtSandbox/1.0/videoVerification/v1';
+            $endpoint = $baseUrl . '/digitalSignatureRSIslamIbnuSinaSigli/1.0/videoVerification/v1';
 
             Log::info('Video verification request', [
                 'endpoint' => $endpoint,
@@ -369,7 +369,7 @@ class PeruriService
             ];
 
             $baseUrl = rtrim($this->baseUrl, '/');
-            $endpoint = $baseUrl . '/digitalSignatureFullJwtSandbox/1.0/checkCertificate/v1';
+            $endpoint = $baseUrl . '/digitalSignatureSession/1.0/checkCertificate/v1';
 
             Log::info('Certificate status check request', [
                 'endpoint' => $endpoint,
@@ -438,7 +438,7 @@ class PeruriService
             ];
 
             $baseUrl = rtrim($this->baseUrl, '/');
-            $endpoint = $baseUrl . '/digitalSignatureFullJwtSandbox/1.0/sendSpeciment/v1';
+            $endpoint = $baseUrl . '/digitalSignatureSession/1.0/sendSpeciment/v1';
 
             Log::info('Sending specimen request', [
                 'endpoint' => $endpoint,

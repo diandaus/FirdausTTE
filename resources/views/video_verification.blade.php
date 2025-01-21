@@ -63,7 +63,7 @@
         .camera-container {
             position: relative;
             width: 100%;
-            margin: 20px 0;
+            margin: 10px 0;
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -77,14 +77,16 @@
         }
 
         .instruction {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             color: #007BFF;
-            margin: 15px 0;
+            margin: 0 0 10px 0;
             font-weight: bold;
             padding: 10px;
             background-color: #f8f9fa;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 10;
         }
 
         #recordingStatus {
@@ -173,6 +175,25 @@
             .logo:first-child {
                 height: 40px;
             }
+
+            .instruction-container {
+                width: 95%;
+                top: 5px;
+            }
+            
+            .alert-primary {
+                padding: 8px;
+            }
+            
+            .alert-heading {
+                font-size: 1rem;
+                margin-bottom: 5px !important;
+            }
+            
+            .instruction p {
+                font-size: 0.9rem;
+                margin-bottom: 5px !important;
+            }
         }
 
         .modal-content {
@@ -214,7 +235,7 @@
         }
 
         .progress {
-            background-color: #e9ecef;
+            background-color: rgba(255, 255, 255, 0.3);
             border-radius: 10px;
             overflow: hidden;
         }
@@ -251,6 +272,28 @@
         .loading-text::after {
             content: '';
             animation: ellipsis 1.5s infinite;
+        }
+
+        /* Tambahkan style baru untuk container instruksi */
+        .instruction-container {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            z-index: 100;
+        }
+
+        .alert-primary {
+            background-color: rgba(255, 255, 255, 0.75);
+            border: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .alert-primary h5,
+        .alert-primary p {
+            color: #000;
+            text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
         }
     </style>
     <script>
@@ -492,14 +535,13 @@
 
     function showInstruction() {
         const instructionElement = document.getElementById('currentInstruction');
-        instructionElement.textContent = instructions[currentInstruction];
         
         // Tambahkan progress bar untuk setiap instruksi
         instructionElement.innerHTML = `
             <div class="alert alert-primary mb-0">
-                <h5 class="alert-heading mb-2">Langkah ${currentInstruction + 1} dari ${instructions.length}</h5>
-                <p class="mb-2">${instructions[currentInstruction]}</p>
-                <div class="progress" style="height: 5px;">
+                
+                <p class="mb-1">${instructions[currentInstruction]}</p>
+                <div class="progress" style="height: 3px;">
                     <div class="progress-bar progress-bar-striped progress-bar-animated" 
                          role="progressbar" 
                          style="width: 0%">
@@ -621,7 +663,7 @@
                 title: 'Berhasil!',
                 text: response.message,
                 icon: 'success',
-                confirmButtonText: 'OK'
+                confirmButtonText: 'Atur Spesimen Tanda Tangan'
             }).then((result) => {
                 if (result.isConfirmed || result.isDismissed) {
                     // Redirect ke halaman specimen tanpa menampilkan error
@@ -660,14 +702,16 @@
             </div>
         </div>
 
-        <h1>Video Verifikasi (E-KYC)</h1>
+        <!-- <h1>Video Verifikasi (E-KYC)</h1> -->
 
         <div class="camera-container">
+            <div class="instruction-container">
+                <div id="currentInstruction" class="instruction"></div>
+            </div>
             <video id="video" autoplay playsinline></video>
             <canvas id="canvas" style="display: none;"></canvas>
         </div>
 
-        <div class="instruction" id="currentInstruction"></div>
         <p id="recordingStatus"></p>
 
         <div class="button-container">
