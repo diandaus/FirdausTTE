@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Exception;
+use Carbon\Carbon;
 
 class PeruriService
 {
@@ -122,7 +123,7 @@ class PeruriService
                 'province' => $data['province'],
                 'gender' => $data['gender'],
                 'placeOfBirth' => $data['placeOfBirth'],
-                'dateOfBirth' => $data['dateOfBirth'],
+                'dateOfBirth' => Carbon::parse($data['dateOfBirth'])->format('d/m/Y'),
                 'orgUnit' => $data['orgUnit'] ?? '',
                 'workUnit' => $data['workUnit'] ?? '',
                 'position' => $data['position'] ?? '',
@@ -237,9 +238,6 @@ class PeruriService
                 $data['param'],
                 [
                     'ktpPhoto' => 'BASE64_CONTENT_HIDDEN',
-                    'npwpPhoto' => 'BASE64_CONTENT_HIDDEN',
-                    'selfPhoto' => 'BASE64_CONTENT_HIDDEN',
-                    'password' => '********',
                     'ktp' => $this->maskKTP($data['param']['ktp'])
                 ]
             )]

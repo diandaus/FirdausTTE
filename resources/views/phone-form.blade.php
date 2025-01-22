@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form Nomor Telepon</title>
+    <title>Registrasi Peruri</title>
     
     <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -527,8 +527,8 @@ $(document).ready(function () {
                             <p class="mb-3">Gagal melakukan pencarian data untuk nomor <strong>${phone}</strong>.</p>
                             <p class="mb-2">Silakan coba lagi atau hubungi Manajemen Rumah Sakit jika masalah berlanjut:</p>
                             <ul class="mt-2 mb-0">
-                                <li>Telepon: (021) XXXXXXXX</li>
-                                <li>Email: admin@rs-example.com</li>
+                                <li>Telp: 0821-2939-4621 (Maulidar)</li>
+                                <li>Telp: 0853-5983-1390 (IT RS)</li>
                             </ul>
                         </div>
                     `,
