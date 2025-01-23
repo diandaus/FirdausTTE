@@ -61,7 +61,10 @@ class CertificateController extends Controller
             } else {
                 $result = [
                     'valid' => false,
-                    'message' => $certificateStatus['message'] ?? 'Gagal memeriksa status sertifikat'
+                    'message' => $certificateStatus['message'],
+                    'status' => $certificateStatus['status'],
+                    'name' => $user->name,
+                    'email' => $user->email
                 ];
             }
 

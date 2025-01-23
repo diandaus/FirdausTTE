@@ -28,6 +28,7 @@ Route::get('/video-verification', [VideoVerificationController::class, 'index'])
     ->name('video-verification.index');
 Route::post('/video-verification/verify', [VideoVerificationController::class, 'verify'])
     ->name('video.verify');
+Route::post('/video-verification/start', [VideoVerificationController::class, 'start'])->name('video-verification.start');
 
 // OCR Route
 Route::post('/ocr-ktp', [OCRController::class, 'processKTP'])->name('ocr.ktp');

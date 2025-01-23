@@ -175,6 +175,22 @@
                                                 @endif
                                             </p>
                                         </div>
+                                    @elseif(session('result')['status'] === 'NOT_VERIFIED')
+                                        <hr>
+                                        <div class="mt-3">
+                                            <p class="mb-2"><strong><i class="bi bi-person me-2"></i>Nama:</strong> {{ session('result')['name'] }}</p>
+                                            <p class="mb-2"><strong><i class="bi bi-envelope me-2"></i>Email:</strong> {{ session('result')['email'] }}</p>
+                                            <p class="mb-3"><strong><i class="bi bi-exclamation-triangle me-2"></i>Status:</strong> 
+                                                <span class="badge bg-warning">Belum Verifikasi</span>
+                                            </p>
+                                            <form action="{{ route('video-verification.start') }}" method="POST" class="mt-2">
+                                                @csrf
+                                                <input type="hidden" name="email" value="{{ session('result')['email'] }}">
+                                                <button type="submit" class="btn btn-primary w-100">
+                                                    <i class="bi bi-camera-video me-2"></i>Mulai Verifikasi Wajah
+                                                </button>
+                                            </form>
+                                        </div>
                                     @endif
                                 </div>
                             </div>

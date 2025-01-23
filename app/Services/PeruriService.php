@@ -369,12 +369,6 @@ class PeruriService
             $baseUrl = rtrim($this->baseUrl, '/');
             $endpoint = $baseUrl . '/digitalSignatureSession/1.0/checkCertificate/v1';
 
-            Log::info('Certificate status check request', [
-                'endpoint' => $endpoint,
-                'request_data' => $requestData
-            ]);
-
-            // Headers sesuai dengan curl
             $response = Http::timeout(30)
                 ->withHeaders([
                     'x-Gateway-APIKey' => $this->apiKey,
@@ -404,6 +398,14 @@ class PeruriService
                     'status' => 'COMPLETED',
                     'message' => 'Sertifikat aktif dan valid',
                     'data' => $result['data'] ?? []
+                ];
+            } else if ($result['resultDesc'] === 'not yet KYC, 0 Times') {
+                return [
+                    'success' => false,
+                    'status' => 'NOT_VERIFIED',
+                    'message' => 'Anda belum melakukan verifikasi wajah',
+                    'needs_verification' => true,
+                    'data' => $result
                 ];
             } else {
                 return [
