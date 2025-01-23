@@ -49,7 +49,16 @@ class CertificateController extends Controller
                 'status' => $certificateStatus
             ]);
 
-            if ($certificateStatus['success']) {
+            if ($certificateStatus['resultDesc'] === 'not yet KYC, 0 Times') {
+                $result = [
+                    'valid' => false,
+                    'status' => 'NOT_VERIFIED',
+                    'message' => 'Anda belum melakukan verifikasi wajah',
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'data' => $certificateStatus
+                ];
+            } else {
                 $result = [
                     'valid' => true,
                     'message' => 'Sertifikat ditemukan',
@@ -57,14 +66,6 @@ class CertificateController extends Controller
                     'email' => $user->email,
                     'status' => $certificateStatus['status'],
                     'data' => $certificateStatus['data']
-                ];
-            } else {
-                $result = [
-                    'valid' => false,
-                    'message' => $certificateStatus['message'],
-                    'status' => $certificateStatus['status'],
-                    'name' => $user->name,
-                    'email' => $user->email
                 ];
             }
 
