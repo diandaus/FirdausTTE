@@ -8,6 +8,7 @@ use App\Http\Controllers\SpecimenController;
 use App\Http\Controllers\PhoneNumberController;
 use App\Http\Controllers\PhoneVerificationController;
 use App\Http\Controllers\IdentityVerificationController;
+use App\Http\Controllers\CertificateController;
 use Illuminate\Support\Facades\Route;
 
 // Phone Number Routes (as home)
@@ -81,3 +82,6 @@ if (config('app.debug')) {
         echo "</table>";
     });
 }
+
+Route::get('/check-certificate', [CertificateController::class, 'showCheckForm'])->name('certificate.form');
+Route::post('/check-certificate', [CertificateController::class, 'checkCertificate'])->name('certificate.check');

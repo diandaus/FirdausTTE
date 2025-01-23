@@ -397,11 +397,22 @@ class PeruriService
                 'result' => $result
             ]);
 
-            return [
-                'success' => true,
-                'status' => $result['resultCode'] === '0' ? 'COMPLETED' : 'PENDING',
-                'data' => $result
-            ];
+            // Periksa status berdasarkan response
+            if ($result['resultCode'] === '0') {
+                return [
+                    'success' => true,
+                    'status' => 'COMPLETED',
+                    'message' => 'Sertifikat aktif dan valid',
+                    'data' => $result['data'] ?? []
+                ];
+            } else {
+                return [
+                    'success' => false,
+                    'status' => 'PENDING',
+                    'message' => $result['resultDesc'] ?? 'Sertifikat belum aktif atau tidak ditemukan',
+                    'data' => $result
+                ];
+            }
 
         } catch (Exception $e) {
             Log::error('Certificate status check error', [
@@ -411,8 +422,8 @@ class PeruriService
 
             return [
                 'success' => false,
-                'message' => 'Gagal memeriksa status sertifikat',
-                'error' => $e->getMessage()
+                'message' => 'Gagal memeriksa status sertifikat: ' . $e->getMessage(),
+                'status' => 'ERROR'
             ];
         }
     }
