@@ -49,12 +49,13 @@ class CertificateController extends Controller
                 'status' => $certificateStatus
             ]);
 
-            // Cek kondisi "not yet KYC"
-            if (isset($certificateStatus['resultDesc']) && $certificateStatus['resultDesc'] === 'not yet KYC, 0 Times') {
+            // Cek kondisi "Not Yet KYC"
+            if (isset($certificateStatus['message']) && 
+                strtolower($certificateStatus['message']) === 'not yet kyc, 0 times') {
                 $result = [
                     'valid' => false,
                     'needs_verification' => true,
-                    'message' => 'Anda belum melakukan verifikasi wajah',
+                    'message' => 'Not Yet KYC, 0 Times',
                     'name' => $user->name,
                     'email' => $user->email,
                     'data' => $certificateStatus
