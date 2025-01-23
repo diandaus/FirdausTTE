@@ -163,4 +163,32 @@ class VideoVerificationController extends Controller
             ]);
         }
     }
+
+    public function start(Request $request)
+    {
+        try {
+            $email = $request->input('email');
+            if (!$email) {
+                throw new \Exception('Email tidak ditemukan');
+            }
+
+            // Simpan email ke session untuk digunakan di halaman verifikasi
+            session(['registration_email' => $email]);
+
+            Log::info('Starting video verification process from certificate check', [
+                'email' => $email
+            ]);
+
+            // Redirect ke halaman verifikasi video
+            return redirect()->route('video_verification.index');
+
+        } catch (\Exception $e) {
+            Log::error('Error starting video verification', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
 }

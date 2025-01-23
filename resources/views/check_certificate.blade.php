@@ -8,6 +8,7 @@
     <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     
     <style>
         body {
@@ -166,7 +167,6 @@
                                         <hr>
                                         <div class="mt-3">
                                             <p class="mb-2"><strong><i class="bi bi-person me-2"></i>Nama:</strong> {{ session('result')['name'] }}</p>
-                                            <p class="mb-2"><strong><i class="bi bi-envelope me-2"></i>Email:</strong> {{ session('result')['email'] }}</p>
                                             <p class="mb-0"><strong><i class="bi bi-check2-square me-2"></i>Status:</strong> 
                                                 @if(session('result')['status'] === 'COMPLETED')
                                                     <span class="badge bg-success">Aktif</span>
@@ -217,5 +217,51 @@
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        @if(session('result') && session('result')['status'] === 'NOT_VERIFIED')
+            Swal.fire({
+                title: '<strong>Verifikasi Diperlukan</strong>',
+                icon: 'warning',
+                html: `
+                    <div class="text-start">
+                        <p><strong>Nama:</strong> {{ session('result')['name'] }}</p>
+                        <p class="mb-3"><strong>Status:</strong> Belum Verifikasi</p>
+                        <p>Anda belum melakukan verifikasi wajah. Silakan lakukan verifikasi untuk mengaktifkan sertifikat Anda.</p>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: '<i class="bi bi-camera-video me-2"></i>Mulai Verifikasi Wajah',
+                cancelButtonText: 'Tutup',
+                confirmButtonColor: '#0d6efd',
+                cancelButtonColor: '#6c757d',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Submit form untuk memulai verifikasi
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '{{ route('video-verification.start') }}';
+                    
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    
+                    const emailInput = document.createElement('input');
+                    emailInput.type = 'hidden';
+                    emailInput.name = 'email';
+                    emailInput.value = '{{ session('result')['email'] ?? '' }}';
+                    
+                    form.appendChild(csrfToken);
+                    form.appendChild(emailInput);
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        @endif
+    });
+    </script>
 </body>
 </html> 
