@@ -157,8 +157,8 @@
                         </form>
 
                         @if(session('result'))
-                            <!-- Sembunyikan alert default jika status NOT_VERIFIED -->
-                            @if(session('result')['status'] !== 'NOT_VERIFIED')
+                            <!-- Sembunyikan alert default jika perlu verifikasi -->
+                            @if(!isset(session('result')['needs_verification']))
                                 <div class="mt-4">
                                     <div class="alert {{ session('result')['valid'] ? 'alert-success' : 'alert-danger' }}">
                                         <h5 class="alert-heading">
@@ -170,11 +170,7 @@
                                             <div class="mt-3">
                                                 <p class="mb-2"><strong><i class="bi bi-person me-2"></i>Nama:</strong> {{ session('result')['name'] }}</p>
                                                 <p class="mb-0"><strong><i class="bi bi-check2-square me-2"></i>Status:</strong> 
-                                                    @if(session('result')['status'] === 'COMPLETED')
-                                                        <span class="badge bg-success">Aktif</span>
-                                                    @else
-                                                        <span class="badge bg-warning">Pending</span>
-                                                    @endif
+                                                    <span class="badge bg-success">Aktif</span>
                                                 </p>
                                             </div>
                                         @endif
@@ -207,54 +203,49 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        @if(session('result'))
-            @if(session('result')['status'] === 'NOT_VERIFIED' || 
-                (isset(session('result')['data']['resultDesc']) && 
-                 session('result')['data']['resultDesc'] === 'not yet KYC, 0 Times'))
-                Swal.fire({
-                    title: '<strong>Verifikasi Diperlukan</strong>',
-                    icon: 'warning',
-                    html: `
-                        <div class="text-start">
-                            <p><strong>Nama:</strong> {{ session('result')['name'] }}</p>
-                            <p class="mb-3"><strong>Status:</strong> Belum Verifikasi</p>
-                            <p>Anda belum melakukan verifikasi wajah. Silakan lakukan verifikasi untuk mengaktifkan sertifikat Anda.</p>
-                        </div>
-                    `,
-                    showCancelButton: true,
-                    confirmButtonText: '<i class="bi bi-camera-video me-2"></i>Mulai Verifikasi Wajah',
-                    cancelButtonText: 'Tutup',
-                    confirmButtonColor: '#0d6efd',
-                    cancelButtonColor: '#6c757d',
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Submit form untuk memulai verifikasi
-                        const form = document.createElement('form');
-                        form.method = 'POST';
-                        form.action = '{{ route('video-verification.start') }}';
-                        
-                        const csrfToken = document.createElement('input');
-                        csrfToken.type = 'hidden';
-                        csrfToken.name = '_token';
-                        csrfToken.value = '{{ csrf_token() }}';
-                        
-                        const emailInput = document.createElement('input');
-                        emailInput.type = 'hidden';
-                        emailInput.name = 'email';
-                        emailInput.value = '{{ session('result')['email'] ?? '' }}';
-                        
-                        form.appendChild(csrfToken);
-                        form.appendChild(emailInput);
-                        document.body.appendChild(form);
-                        form.submit();
-                    }
-                });
-            @endif
-
-            // Debug untuk melihat response
-            console.log('Session Result:', @json(session('result')));
+        @if(session('result') && isset(session('result')['needs_verification']))
+            Swal.fire({
+                title: '<strong>Verifikasi Diperlukan</strong>',
+                icon: 'warning',
+                html: `
+                    <div class="text-start">
+                        <p><strong>Nama:</strong> {{ session('result')['name'] }}</p>
+                        <p class="mb-3"><strong>Status:</strong> Belum Verifikasi</p>
+                        <p>Anda belum melakukan verifikasi wajah. Silakan lakukan verifikasi untuk mengaktifkan sertifikat Anda.</p>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: '<i class="bi bi-camera-video me-2"></i>Mulai Verifikasi Wajah',
+                cancelButtonText: 'Tutup',
+                confirmButtonColor: '#0d6efd',
+                cancelButtonColor: '#6c757d',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '{{ route('video-verification.start') }}';
+                    
+                    const csrfToken = document.createElement('input');
+                    csrfToken.type = 'hidden';
+                    csrfToken.name = '_token';
+                    csrfToken.value = '{{ csrf_token() }}';
+                    
+                    const emailInput = document.createElement('input');
+                    emailInput.type = 'hidden';
+                    emailInput.name = 'email';
+                    emailInput.value = '{{ session('result')['email'] ?? '' }}';
+                    
+                    form.appendChild(csrfToken);
+                    form.appendChild(emailInput);
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
         @endif
+
+        // Debug untuk melihat response
+        console.log('Session Result:', @json(session('result')));
     });
     </script>
 </body>
