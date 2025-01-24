@@ -217,7 +217,7 @@
                     html: `
                         <div class="text-start">
                             <p><strong>Nama:</strong> ${result.name}</p>
-                            <p class="mb-3"><strong>Status:</strong> Belum Verifikasi</p>
+                            <p class="mb-3"><strong>Status:</strong> Belum Terverifikasi</p>
                             <p>Anda belum melakukan verifikasi wajah. Silakan lakukan verifikasi untuk mengaktifkan sertifikat Anda.</p>
                         </div>
                     `,

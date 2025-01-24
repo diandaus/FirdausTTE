@@ -14,7 +14,29 @@ class VideoVerificationController extends Controller
 
     public function index()
     {
-        return view('video_verification');
+        // Ambil email dari session
+        $email = session('registration_email');
+        
+        if (!$email) {
+            return redirect()->route('register')
+                ->with('error', 'Silakan melakukan registrasi terlebih dahulu');
+        }
+
+        // Ambil data user dari database
+        $user = DB::table('akun_peruri')
+            ->where('email', $email)
+            ->first();
+
+        if (!$user) {
+            return redirect()->route('register')
+                ->with('error', 'Data pengguna tidak ditemukan');
+        }
+
+        // Pass user data ke view
+        return view('video_verification', [
+            'userEmail' => $email,
+            'userName' => $user->name
+        ]);
     }
 
     public function verify(Request $request)

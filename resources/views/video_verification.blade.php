@@ -459,6 +459,9 @@
         });
     }
 
+    // Ambil email dari PHP yang dikirim controller
+    let userEmail = @json($userEmail ?? '');
+    
     document.addEventListener('DOMContentLoaded', async function() {
         if (!userEmail) {
             await Swal.fire({
@@ -579,8 +582,6 @@
         document.getElementById('recordingStatus').textContent = "Verifikasi Selesai";
         document.getElementById('currentInstruction').textContent = "Silakan klik tombol Kirim";
     }
-
-    let userEmail = localStorage.getItem('registeredEmail');
 
     async function saveRecording() {
         const button = document.getElementById('actionButton');
