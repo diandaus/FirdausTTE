@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Exception;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class PeruriService
 {
@@ -511,6 +512,43 @@ class PeruriService
             return [
                 'success' => false,
                 'message' => 'Gagal mengirim specimen: ' . $e->getMessage()
+            ];
+        }
+    }
+
+    public function checkRegistrationStatus($email)
+    {
+        try {
+            // Cek status di database lokal
+            $localStatus = DB::table('peruri_registrations')
+                ->where('email', $email)
+                ->first();
+
+            if ($localStatus) {
+                // Jika sudah terdaftar, cek status sertifikat
+                $certificateStatus = $this->checkCertificateStatus($email);
+                
+                return [
+                    'is_registered' => true,
+                    'registered_at' => $localStatus->registered_at,
+                    'certificate_status' => $certificateStatus
+                ];
+            }
+
+            return [
+                'is_registered' => false,
+                'message' => 'Belum terdaftar'
+            ];
+
+        } catch (\Exception $e) {
+            \Log::error('Check registration status error', [
+                'email' => $email,
+                'error' => $e->getMessage()
+            ]);
+
+            return [
+                'is_registered' => false,
+                'error' => $e->getMessage()
             ];
         }
     }

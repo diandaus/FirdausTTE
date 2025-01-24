@@ -93,49 +93,56 @@ class PhoneNumberController extends Controller
                 'position' => $userData->position,
             ];
 
-            \Log::info('Calling Peruri registration service', ['data' => $registrationData]);
-
             // Register with Peruri
             $registrationResult = $this->peruriService->register($registrationData);
-
             \Log::info('Peruri registration result', ['result' => $registrationResult]);
 
             if ($registrationResult['success']) {
-                // Create record in peruri_registration table
-                DB::table('peruri_registrations')->insert([
-                    'name' => $userData->name,
-                    'email' => $userData->email,
-                    'registered_at' => now(),
-                    'registration_response' => json_encode($registrationResult['data']),
-                    'created_at' => now(),
-                    'updated_at' => now()
-                ]);
-
-                \Log::info('Registration successful, sending response', [
-                    'email' => $userData->email,
-                    'response' => $registrationResult['data']
-                ]);
-
-                return response()
-                    ->json([
-                        'status' => 'success',
-                        'message' => 'Registrasi berhasil!',
-                        'data' => [
+                try {
+                    // Coba update atau insert ke database
+                    DB::table('peruri_registrations')->updateOrInsert(
+                        ['email' => $userData->email],
+                        [
+                            'name' => $userData->name,
                             'email' => $userData->email,
-                            'peruri_response' => $registrationResult['data']
+                            'registered_at' => now(),
+                            'registration_response' => json_encode($registrationResult['data']),
+                            'updated_at' => now()
                         ]
-                    ])
-                    ->header('Content-Type', 'application/json')
-                    ->header('X-Debug-Info', 'none');
+                    );
+
+                    \Log::info('Registration data saved/updated', [
+                        'email' => $userData->email,
+                        'status' => 'success'
+                    ]);
+
+                } catch (\Exception $dbError) {
+                    // Log error tapi tetap lanjut
+                    \Log::warning('Database operation warning', [
+                        'message' => $dbError->getMessage(),
+                        'email' => $userData->email
+                    ]);
+                }
+
+                // Cek status sertifikat
+                $certificateStatus = $this->peruriService->checkCertificateStatus($userData->email);
+                
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Registrasi berhasil!',
+                    'data' => [
+                        'email' => $userData->email,
+                        'peruri_response' => $registrationResult['data'],
+                        'certificate_status' => $certificateStatus
+                    ]
+                ]);
             }
 
             \Log::warning('Registration failed', ['result' => $registrationResult]);
-            return response()
-                ->json([
-                    'status' => 'error',
-                    'message' => $registrationResult['message'] ?? 'Gagal melakukan registrasi'
-                ], 400)
-                ->header('Content-Type', 'application/json');
+            return response()->json([
+                'status' => 'error',
+                'message' => $registrationResult['message'] ?? 'Gagal melakukan registrasi'
+            ], 400);
 
         } catch (\Exception $e) {
             \Log::error('Registration error', [
@@ -143,12 +150,10 @@ class PhoneNumberController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
             
-            return response()
-                ->json([
-                    'status' => 'error',
-                    'message' => 'Terjadi kesalahan: ' . $e->getMessage()
-                ], 500)
-                ->header('Content-Type', 'application/json');
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

@@ -126,7 +126,7 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-body p-4">
-                        <h4 class="card-title mb-4">Verifikasi Sertifikat</h4>
+                        <h4 class="card-title mb-4">Status Verifikasi Sertifikat TTE</h4>
                         <form method="POST" action="{{ route('certificate.check') }}">
                             @csrf
                             <div class="mb-3">
